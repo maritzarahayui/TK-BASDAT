@@ -1,0 +1,29 @@
+{% load static %}
+
+{% block meta %}
+<title>Login</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock meta %}
+
+{% block content %}
+
+    <!-- <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div> -->
+    <form>
+        <h3>Login</h3>
+        <label for="username">Nama</label>
+        <input type="text" placeholder="Nama" id="nama">
+        <label for="password">Email</label>
+        <input type="text" placeholder="Email" id="email">
+        <a href=""><button style="background-color: #ebce46">Log In</button></a>
+    </form>
+
+
+{% endblock content %}

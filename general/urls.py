@@ -4,5 +4,5 @@ from general import views
 app_name = "general"
 
 urlpatterns = [
-  
+   path('login/', views.login, name="login"),
 ]
