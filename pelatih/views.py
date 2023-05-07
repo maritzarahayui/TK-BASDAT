@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def register_pelatih(request):
+    return render(request, "register_pelatih.html")

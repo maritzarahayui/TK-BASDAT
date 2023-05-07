@@ -4,5 +4,5 @@ from pelatih import views
 app_name = "pelatih"
 
 urlpatterns = [
-  
+   path('register/', views.register_pelatih, name="register-pelatih"),
 ]
