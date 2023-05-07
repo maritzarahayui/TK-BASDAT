@@ -8,3 +8,12 @@ def dashboard_atlet(request):
 
 def tes_kualifikasi(request):
     return render(request, "tes_kualifikasi.html")
+
+def daftar_event(request):
+    return render(request, "daftar_event.html")
+
+def daftar_event_detail(request):
+    return render(request, "daftar_event_detail.html")
+
+def pilih_kategori(request):
+    return render(request, "pilih_kategori.html")
