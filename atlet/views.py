@@ -11,3 +11,13 @@ def tes_kualifikasi(request):
 
 def form_kualifikasi(request):
     return render(request, "form_kualifikasi.html")
+
+def daftar_event(request):
+    return render(request, "daftar_event.html")
+
+def daftar_event_detail(request):
+    return render(request, "daftar_event_detail.html")
+
+def pilih_kategori(request):
+    return render(request, "pilih_kategori.html")
+

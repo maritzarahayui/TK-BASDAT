@@ -1,0 +1,59 @@
+{% load static %}
+
+{% block meta %}
+<title>Register Pelatih</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/register_pelatih.css' %}">
+
+
+{% endblock meta %}
+
+{% block content %}
+
+    <!-- <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div> -->
+
+    <form id="mainwrapper">
+        <h3>Register Pelatih</h3>
+
+        <label >Nama</label>
+        <input type="text" placeholder="Nama" id="nama">
+
+        <label >Email</label>
+        <input type="text" placeholder="Email" id="email">
+
+        <label >Negara</label>
+        <input type="text" placeholder="Negara" id="email">
+
+        <label >Kategori</label>
+        <br>
+        <div class="checkbox">
+            <input type="checkbox" id="vehicle2" name="vehicle1" value="Bike">
+            <label for="vehicle1">Tunggal Putra</label><br>
+            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <label for="vehicle2">Tunggal Putri</label><br>
+            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <label for="vehicle2">Ganda Putra</label><br>
+            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <label for="vehicle2">Ganda Putri</label><br>
+            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <label for="vehicle2">Ganda Campuran</label><br>
+        </div>
+
+        <label >Tanggal Mulai</label>
+        <input type="date" id="birthday" name="birthday">
+
+        
+
+        <a href=""><button>Daftar</button></a>
+    </form>
+
+
+
+{% endblock content %}
