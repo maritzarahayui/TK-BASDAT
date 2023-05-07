@@ -8,3 +8,6 @@ def dashboard_atlet(request):
 
 def tes_kualifikasi(request):
     return render(request, "tes_kualifikasi.html")
+
+def form_kualifikasi(request):
+    return render(request, "form_kualifikasi.html")
