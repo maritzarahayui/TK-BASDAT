@@ -1,0 +1,206 @@
+:root {
+    --primary: #FFE01B;
+    --light: #F1F8FF;
+    --orange: #F9D342;
+    --dark: #292826;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--dark);
+    color: var(--primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+*{
+    padding: 0; 
+    margin: 0; 
+    box-sizing: border-box;
+}
+
+header {
+	text-align: center;
+	width: 100%;
+	height: auto;
+    margin-top: 100px;
+}
+
+/* Timer */
+.container {
+    padding: 20px;
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%, -50%);
+}
+
+input {
+    display: none;
+}
+
+.timer {
+    padding: 10px;
+    overflow: hidden;
+    display: inline-block;
+}
+.timer .cell {
+    width: 0.6em;
+    height: 60px;
+    font-size: 50px;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    color: var(--light);
+}
+.timer .cell .numbers {
+    width: 0.6em;
+    line-height: 60px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.timer-controls {
+    margin-top: 20px;
+}
+.timer-controls label {
+    cursor: pointer;
+    margin: 0 20px;
+    font-size: 20px;
+    border-radius: 50%;
+    color: white;
+    display: inline-flex;
+    width: 60px;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+}
+.timer-controls label:nth-child(1) {
+    background-color: #4caf50;
+}
+.timer-controls label:nth-child(1):hover {
+    background-color: #81c784;
+}
+.timer-controls label:nth-child(2) {
+    background-color: #f44336;
+}
+.timer-controls label:nth-child(2):hover {
+    background-color: #e57373;
+}
+.timer-controls label:nth-child(3) {
+    background-color: #2196f3;
+}
+.timer-controls label:nth-child(3):hover {
+    background-color: #64b5f6;
+}
+
+#stop:checked ~ .timer .numbers {
+    -webkit-animation-play-state: paused;
+            animation-play-state: paused;
+}
+
+#start:checked ~ .timer .numbers {
+    -webkit-animation-play-state: running;
+            animation-play-state: running;
+}
+
+#reset:checked ~ .timer .numbers {
+    -webkit-animation: none;
+            animation: none;
+}
+
+@-webkit-keyframes moveten {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: -600px;
+    }
+}
+
+@keyframes moveten {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: -600px;
+    }
+}
+@-webkit-keyframes movesix {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: -360px;
+    }
+}
+@keyframes movesix {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: -360px;
+    }
+}
+.moveten {
+    -webkit-animation: moveten 1s steps(10, end) infinite;
+            animation: moveten 1s steps(10, end) infinite;
+    -webkit-animation-play-state: paused;
+            animation-play-state: paused;
+}
+
+.movesix {
+    -webkit-animation: movesix 1s steps(6, end) infinite;
+            animation: movesix 1s steps(6, end) infinite;
+    -webkit-animation-play-state: paused;
+            animation-play-state: paused;
+}
+
+.tenhour {
+    -webkit-animation-duration: 360000s;
+            animation-duration: 360000s;
+}
+
+.hour {
+    -webkit-animation-duration: 36000s;
+            animation-duration: 36000s;
+}
+
+.tenminute {
+    -webkit-animation-duration: 3600s;
+            animation-duration: 3600s;
+}
+
+.minute {
+    -webkit-animation-duration: 600s;
+            animation-duration: 600s;
+}
+
+.tensecond {
+    -webkit-animation-duration: 60s;
+            animation-duration: 60s;
+}
+
+.second {
+    -webkit-animation-duration: 10s;
+            animation-duration: 10s;
+}
+
+/* .millisecond {
+    -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+}
+
+.tenmillisecond {
+    -webkit-animation-duration: 0.1s;
+            animation-duration: 0.1s;
+}
+
+.hundredmillisecond {
+    -webkit-animation-duration: 0.01s;
+            animation-duration: 0.01s;
+} */
+
