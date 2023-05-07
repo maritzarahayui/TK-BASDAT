@@ -53,7 +53,7 @@
     </nav> -->
 
     <!-- Navbar Pelatih -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
         <a href="" class="navbar-brand p-0">
             <h1 class="text-title m-0">Babadu</h1>
         </a>
@@ -68,7 +68,7 @@
             </div>
             <a href="" class="btn btn-logout py-2 px-4">Logout</a>
         </div>
-    </nav>
+    </nav> -->
 
 
 
@@ -77,11 +77,9 @@
     <div class="bottom-left">
         <h1 id="l-babadu">babadu</h1>
         <h2 id="l-f03">F Kelompok 3</h2>
-        <div class="w3-show-inline-block">
-        <div class="w3-bar">
-            <a href="{% url 'general:login' %}"><button>Login</button></a>
+        <div class="buttons">
+            <a href="{% url 'general:login' %}" id="btn-login"><button>Login</button></a>
             <a href="{% url 'general:register' %}"><button>Register</button></a>
-        </div>
         </div>
     </div>
 
