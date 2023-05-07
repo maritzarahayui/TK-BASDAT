@@ -3,6 +3,9 @@ from django.shortcuts import render
 def register_umpire(request):
     return render(request, "register_umpire.html")
 
+def dashboard_umpire(request):
+    return render(request, "dashboard_umpire.html")
+
 def pertandingan_page(request):
     return render(request, "pertandingan.html")
 

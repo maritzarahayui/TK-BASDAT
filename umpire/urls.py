@@ -10,4 +10,5 @@ urlpatterns = [
   path('juara-3/', views.juara3_page, name="juara3_page"),
   path('final/', views.final_page, name="final_page"),
   path('hasil-pertandingan/', views.hasil_pertandingan, name="hasil_pertandingan"),
+  path('dashboard/', views.dashboard_umpire, name="dashboard_umpire")
 ]

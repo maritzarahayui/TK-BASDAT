@@ -1,0 +1,53 @@
+{% load static %}
+
+{% block meta %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Dashboard</title>
+{% endblock meta %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/atlet.css' %}">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+    <a href="" class="navbar-brand p-0">
+        <h1 class="text-title m-0">Babadu</h1>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="fa fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-0 pe-4">
+            <a href="" class="nav-item nav-link">Dashboard</a>
+            <a href="" class="nav-item nav-link active">Tes Kualifikasi</a>
+            <a href="" class="nav-item nav-link">Daftar Event</a>
+            <a href="" class="nav-item nav-link">Enrolled Event</a>
+            <a href="" class="nav-item nav-link">Daftar Sponsor</a>
+        </div>
+        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
+    </div>
+</nav>
+
+<header>
+  <h1>Tes Kualifikasi</h1>
+</header>
+
+<style type="text/css">
+
+    body {
+        background-color: var(--dark);
+    }
+
+
+    header {
+        text-align: center;
+        width: 100%;
+        height: auto;
+        margin-top: 150px;
+        color: var(--orange);
+    }
+    
+
+</style>
+{% endblock content %}
