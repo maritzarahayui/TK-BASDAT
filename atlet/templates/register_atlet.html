@@ -1,0 +1,63 @@
+{% load static %}
+
+{% block meta %}
+<title>Login</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/register_atlet.css' %}">
+
+
+{% endblock meta %}
+
+{% block content %}
+
+    <!-- <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div> -->
+
+
+    <form id="mainwrapper">
+        <h3>Register Atlet</h3>
+
+        <label for="username">Nama</label>
+        <input type="text" placeholder="Nama" id="nama">
+
+        <label for="password">Email</label>
+        <input type="text" placeholder="Email" id="email">
+
+        <label for="password">Negara</label>
+        <input type="text" placeholder="Email" id="email">
+
+        <label for="password">Tanggal Lahir</label>
+        <input type="text" placeholder="Email" id="email">
+
+        <label for="password">Play</label>
+
+        <div class="radio-opt">
+            <label class="radio-inline">
+                <input type="radio" name="optradio" id="radio" checked>Left
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="optradio" id="radio">Right
+            </label>
+         </div>
+
+        <label for="password">Tinggi Badan</label>
+        <input type="text" placeholder="Email" id="email">
+
+        <label for="password">Jenis Kelamin</label>
+        <select id="jenis-kelamin" name="jenis-kelamin">
+            <option value="laki-laki">Laki-Laki</option>
+            <option value="perempuan">Perempuan</option>
+        </select>
+
+        <a href=""><button>Register</button></a>
+    </form>
+
+
+
+{% endblock content %}
