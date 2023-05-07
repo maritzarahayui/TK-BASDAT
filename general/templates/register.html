@@ -18,13 +18,15 @@
     </div> -->
     <div class="register">
         <h3>Choose Your Role</h3>
-       
+        <a href="{% url 'atlet:register-atlet' %}">
             <button id="btn-atlet">Atlet</button>
-       
-            <button id="btn-umpire">Umpire</button>
-       
+        </a>
+        <a href="{% url 'pelatih:register-pelatih' %}">
             <button id="btn-pelatih">Pelatih</button>
-    
+        </a>
+        <a href="{% url 'umpire:register-umpire' %}">
+            <button id="btn-umpire">Umpire</button>
+        </a>
     </div>
 
 
