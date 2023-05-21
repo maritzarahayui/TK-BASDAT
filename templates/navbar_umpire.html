@@ -16,10 +16,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0 pe-4">
-                <a href="" class="nav-item nav-link active">Dashboard</a>
-                <a href="" class="nav-item nav-link">Daftar Atlet</a>
-                <a href="" class="nav-item nav-link">Lihat Event</a>
-                <a href="" class="nav-item nav-link">Hasil Pertandingan</a>
+                <a href="{% url 'umpire:dashboard_umpire' %}" class="nav-item nav-link active">Dashboard</a>
+                <a href="{% url 'pelatih:daftar_atlet' %}" class="nav-item nav-link">Daftar Atlet</a>
+                <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Lihat Event</a>
+                <a href="{% url 'umpire:hasil_pertandingan' %}" class="nav-item nav-link">Hasil Pertandingan</a>
             </div>
             <a href="" class="btn btn-logout py-2 px-4">Logout</a>
         </div>
