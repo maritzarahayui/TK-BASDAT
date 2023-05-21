@@ -20,4 +20,3 @@ def daftar_event_detail(request):
 
 def pilih_kategori(request):
     return render(request, "pilih_kategori.html")
-
