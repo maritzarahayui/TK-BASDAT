@@ -10,7 +10,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
     <a href="" class="navbar-brand p-0">
-        <h1 class="text-title m-0">>Babadu</h1>
+        <h1 class="text-title m-0">Babadu</h1>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="fa fa-bars"></span>
@@ -19,9 +19,20 @@
         <div class="navbar-nav ms-auto py-0 pe-4">
             <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-item nav-link active">Dashboard</a>
             <a href="{% url 'atlet:form_kualifikasi' %}" class="nav-item nav-link">Tes Kualifikasi</a>
-            <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Daftar Event</a>
-            <a href="{% url 'atlet:enrolled_event' %}" class="nav-item nav-link">Enrolled Event</a>
-            <a href="{% url 'atlet:daftar_sponsor' %}" class="nav-item nav-link">Daftar Sponsor</a>
+            <li class="nav-item dropdown">
+                <a href="#" id="menu" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Event</a>
+                <ul class="dropdown-menu">
+                    <a href="{% url 'atlet:daftar_event' %}" class="dropdown-item">Daftar Event</a>
+                    <a href="{% url 'atlet:enrolled_event' %}" class="dropdown-item">Enrolled Event</a>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" id="menu" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Sponsor</a>
+                <ul class="dropdown-menu">
+                    <a href="{% url 'atlet:daftar_sponsor' %}" class="dropdown-item">Daftar Sponsor</a>
+                    <a href="{% url 'atlet:list_sponsor' %}" class="dropdown-item">List Sponsor</a>
+                </ul>
+            </li>
         </div>
         <a href="" class="btn btn-logout py-2 px-4">Logout</a>
     </div>

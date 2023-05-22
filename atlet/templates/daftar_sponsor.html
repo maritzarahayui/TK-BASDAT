@@ -67,22 +67,25 @@
 
 {% endblock meta %} {% block content %}
 
+<title>Daftar Sponsor</title>
 <body>
     {% include 'navbar_atlet.html' %}
     <div class="back">
         <h1>DAFTAR SPONSOR</h1>
-        <form>
+        <form method="post">
+            {% csrf_token %}
             <label for="sponsor">Nama Sponsor :</label>
-            <select id="sponsor" name="sponsor">
-                <option value="sponsor1">Sponsor 1</option>
-                <option value="sponsor2">Sponsor 2</option>
-                <option value="sponsor3">Sponsor 3</option>
+            <select id="sponsor" name="sponsor" required>
+                <option value="" hidden>--</option>
+                {% for q in query%}
+                <option value="{{q.nama_brand}}">{{q.nama_brand}}</option>
+                {% endfor %}
             </select>
             <label for="tgl_mulai">Tanggal Mulai :</label>
-            <input type="date" id="tgl_mulai" name="tgl_mulai">
+            <input type="date" id="tgl_mulai" name="tgl_mulai" required>
 
             <label for="tgl_selesai">Tanggal Selesai :</label>
-            <input type="date" id="tgl_selesai" name="tgl_selesai">
+            <input type="date" id="tgl_selesai" name="tgl_selesai" required>
 
             <input type="submit" value="SUBMIT">
         </form>
