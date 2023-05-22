@@ -44,16 +44,17 @@
         
         <select class="form-select">
             <option selected>Pilih Tempat</option>
-            {% for tempat in tempat_pelaksanaan %}
-                 <option value="1">{{ tempat.tempat }}</option>
+            {% for sql_tempat in tempat %}
+                <option value="1">{{ sql_tempat }}</option>
             {% endfor %}
         </select>
     
         <label class="questions">Tanggal Pelaksanaan</label>
         <select class="form-select">
             <option selected>Pilih Tanggal</option>
-            <option value="1">29/04/2023</option>
-            <option value="2">02/05/2023</option>
+            {% for sql_tanggal in tanggal %}
+                <option value="1">{{ sql_tanggal }}</option>
+            {% endfor %}
         </select>
     
         <a href=""><button>Next</button></a>
