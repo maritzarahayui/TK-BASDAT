@@ -10,24 +10,7 @@
 {% endblock meta %}
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-  <a href="" class="navbar-brand p-0">
-      <h1 class="text-title m-0">>Babadu</h1>
-  </a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-      <span class="fa fa-bars"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-      <div class="navbar-nav ms-auto py-0 pe-4">
-          <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-item nav-link">Dashboard</a>
-          <a href="{% url 'atlet:form_kualifikasi' %}" class="nav-item nav-link">Tes Kualifikasi</a>
-          <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link active">Daftar Event</a>
-          <a href="{% url 'atlet:' %}" class="nav-item nav-link">Enrolled Event</a>
-          <a href="{% url 'atlet' %}" class="nav-item nav-link">Daftar Sponsor</a>
-      </div>
-      <a href="" class="btn btn-logout py-2 px-4">Logout</a>
-  </div>
-</nav>
+{% include 'navbar_atlet.html' %}
 
 <header>
   <h1>Daftar Event</h1>
