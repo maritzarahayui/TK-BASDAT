@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, psycopg2
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,13 +78,26 @@ WSGI_APPLICATION = "badminton.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASESURL = 'postgresql://postgres:VqhDHXgGPL8avdUHqCWP@containers-us-west-72.railway.app:7729/railway'
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'VqhDHXgGPL8avdUHqCWP',
+        'HOST': 'containers-us-west-72.railway.app',
+        'PORT': '7729',
     }
 }
 
+CONN = psycopg2.connect(
+    user = DATABASES["default"]["USER"],
+    password = DATABASES["default"]["PASSWORD"],
+    host = DATABASES["default"]["HOST"],
+    database = DATABASES["default"]["NAME"],
+    port = DATABASES["default"]["PORT"],
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

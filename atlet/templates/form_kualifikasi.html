@@ -23,8 +23,8 @@
             <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-item nav-link">Dashboard</a>
             <a href="{% url 'atlet:form_kualifikasi' %}" class="nav-item nav-link active">Tes Kualifikasi</a>
             <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Daftar Event</a>
-            <a href="{% url 'atlet:' %}" class="nav-item nav-link">Enrolled Event</a>
-            <a href="{% url 'atlet' %}" class="nav-item nav-link">Daftar Sponsor</a>
+            <a href="" class="nav-item nav-link">Enrolled Event</a>
+            <a href="" class="nav-item nav-link">Daftar Sponsor</a>
         </div>
         <a href="" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
@@ -44,15 +44,17 @@
         
         <select class="form-select">
             <option selected>Pilih Tempat</option>
-            <option value="1">Jakarta</option>
-            <option value="2">Bali</option>
+            {% for sql_tempat in tempat %}
+                <option value="1">{{ sql_tempat }}</option>
+            {% endfor %}
         </select>
     
         <label class="questions">Tanggal Pelaksanaan</label>
         <select class="form-select">
             <option selected>Pilih Tanggal</option>
-            <option value="1">29/04/2023</option>
-            <option value="2">02/05/2023</option>
+            {% for sql_tanggal in tanggal %}
+                <option value="1">{{ sql_tanggal }}</option>
+            {% endfor %}
         </select>
     
         <a href=""><button>Next</button></a>
