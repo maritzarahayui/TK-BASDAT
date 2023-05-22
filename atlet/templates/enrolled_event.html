@@ -1,0 +1,321 @@
+{% extends 'base.html' %} {% block meta %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .back {
+        /* max-width: 1200px; */
+        /* margin: 0 auto; */
+        padding: 60px;
+        text-align: center;
+        background-color: #292826;
+    }
+
+    .back h1 {
+        font-size: 48px;
+        color: #F9D342;
+        margin-top: 40px;
+    }
+
+    .back p {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        /*      padding: 10px;*/
+    }
+
+    .card {
+        background-color: #F9D342;
+        margin: 10px;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card .thumbnail {
+        height: 60px;
+        padding-top: 10px;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .card .content {
+        padding: 10px;
+        background-color: #F9D342;
+    }
+
+    .card .content h3 {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0;
+        text-align: center;
+        color: #000;
+    }
+
+    .card .content p {
+        font-size: 14px;
+        margin: 0;
+        line-height: 1.5;
+        color: black;
+    }
+
+    .card .content:hover {
+        background-color: #ffd700;
+        color: #000;
+    }
+
+    .card .button {
+        background-color: #000;
+        border: none;
+        border-radius: 20px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 10px 20px;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+    }
+
+    .card .button:hover {
+        background-color: white;
+        color: #000;
+    }
+
+    .card .popup {
+        background-color: rgba(0, 0, 0, 0.5);
+        bottom: 0;
+        display: none;
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        z-index: 9999;
+    }
+
+    .card .popup-content {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        margin: 100px auto;
+        max-width: 500px;
+        padding: 20
+    }
+
+    .card .popup-content h2 {
+        font-size: 24px;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card .popup-buttons {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .card .popup-button {
+        background-color: #000;
+        border: none;
+        border-radius: 20px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 10px 20px;
+        margin: 0 10px;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+    }
+
+    .card .popup-button:hover {
+        background-color: #ffd700;
+        color: #000;
+    }
+
+    .card.show-popup .popup {
+        display: block;
+    }
+</style>
+
+{% endblock meta %} {% block content %}
+
+<body>
+    {% include 'navbar_atlet.html' %}
+    <div class="back">
+        <h1>EVENT</h1>
+        <p>Berikut adalah event-event yang Anda ikuti</p>
+        <div class="container">
+            <div class="card">
+                <div class="thumbnail">
+                    <h3><b>Indonesia Open </b></h3>
+                </div>
+                <div class="content">
+                    <p><b>Stadium: Senayan</b></p>
+                    <p><b>Hadiah: 1500000000 </b></p>
+                    <p><b>Kategori Superseries: S1000</b></p>
+                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
+                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
+                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
+                    <p><b>Kapasitas: 2000</b></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="button" onclick="showPopup()">Unenrolled</button>
+                    <div class="popup">
+                        <div class="popup-content">
+                            <h2>Are you sure you want to unenroll from this event?</h2>
+                            <div class="popup-buttons">
+                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
+                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="thumbnail">
+                    <h3><b>Indonesia Open </b></h3>
+                </div>
+                <div class="content">
+                    <p><b>Stadium: Senayan</b></p>
+                    <p><b>Hadiah: 1500000000 </b></p>
+                    <p><b>Kategori Superseries: S1000</b></p>
+                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
+                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
+                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
+                    <p><b>Kapasitas: 2000</b></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="button" onclick="showPopup()">Unenrolled</button>
+                    <div class="popup">
+                        <div class="popup-content">
+                            <h2>Are you sure you want to unenroll from this event?</h2>
+                            <div class="popup-buttons">
+                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
+                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="thumbnail">
+                    <h3><b>Indonesia Open </b></h3>
+                </div>
+                <div class="content">
+                    <p><b>Stadium: Senayan</b></p>
+                    <p><b>Hadiah: 1500000000 </b></p>
+                    <p><b>Kategori Superseries: S1000</b></p>
+                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
+                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
+                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
+                    <p><b>Kapasitas: 2000</b></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="button" onclick="showPopup()">Unenrolled</button>
+                    <div class="popup">
+                        <div class="popup-content">
+                            <h2>Are you sure you want to unenroll from this event?</h2>
+                            <div class="popup-buttons">
+                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
+                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="thumbnail">
+                    <h3><b>Indonesia Open </b></h3>
+                </div>
+                <div class="content">
+                    <p><b>Stadium: Senayan</b></p>
+                    <p><b>Hadiah: 1500000000 </b></p>
+                    <p><b>Kategori Superseries: S1000</b></p>
+                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
+                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
+                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
+                    <p><b>Kapasitas: 2000</b></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="button" onclick="showPopup()">Unenrolled</button>
+                    <div class="popup">
+                        <div class="popup-content">
+                            <h2>Are you sure you want to unenroll from this event?</h2>
+                            <div class="popup-buttons">
+                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
+                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="thumbnail">
+                    <h3><b>Indonesia Open </b></h3>
+                </div>
+                <div class="content">
+                    <p><b>Stadium: Senayan</b></p>
+                    <p><b>Hadiah: 1500000000 </b></p>
+                    <p><b>Kategori Superseries: S1000</b></p>
+                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
+                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
+                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
+                    <p><b>Kapasitas: 2000</b></p>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="button" onclick="showPopup()">Unenrolled</button>
+                    <div class="popup">
+                        <div class="popup-content">
+                            <h2>Are you sure you want to unenroll from this event?</h2>
+                            <div class="popup-buttons">
+                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
+                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function showPopup() {
+                    document.querySelector('.card').classList.add('show-popup');
+                }
+                function hidePopup() {
+                    document.querySelector('.card').classList.remove('show-popup');
+                }
+
+                function unenroll() {
+                    // code to remove event data from database
+                    alert('You have successfully unenrolled from this event.');
+                    hidePopup();
+                }
+            </script>
+</body>
+
+
+{% endblock content %}
