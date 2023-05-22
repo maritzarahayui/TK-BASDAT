@@ -23,8 +23,8 @@
             <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-item nav-link">Dashboard</a>
             <a href="{% url 'atlet:form_kualifikasi' %}" class="nav-item nav-link active">Tes Kualifikasi</a>
             <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Daftar Event</a>
-            <a href="{% url 'atlet:' %}" class="nav-item nav-link">Enrolled Event</a>
-            <a href="{% url 'atlet' %}" class="nav-item nav-link">Daftar Sponsor</a>
+            <a href="" class="nav-item nav-link">Enrolled Event</a>
+            <a href="" class="nav-item nav-link">Daftar Sponsor</a>
         </div>
         <a href="" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
@@ -44,8 +44,9 @@
         
         <select class="form-select">
             <option selected>Pilih Tempat</option>
-            <option value="1">Jakarta</option>
-            <option value="2">Bali</option>
+            {% for tempat in tempat_pelaksanaan %}
+                 <option value="1">{{ tempat.tempat }}</option>
+            {% endfor %}
         </select>
     
         <label class="questions">Tanggal Pelaksanaan</label>
