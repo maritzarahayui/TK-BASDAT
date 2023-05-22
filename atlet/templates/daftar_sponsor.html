@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block meta %}
+<style>
+    body {
+        background-color: #F9D342;
+        color: #292826;
+        font-family: Arial, sans-serif;
+    }
+
+    .back {
+        padding: 60px;
+        text-align: center;
+        background-color: #292826;
+    }
+
+    .back h1 {
+        color: #F9D342;
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    form {
+        background-color: #292826;
+        color: #F9D342;
+        padding: 30px;
+        border-radius: 10px;
+        margin: auto;
+        max-width: 500px;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    #sponsor {
+        margin-bottom: 15px;
+    }
+
+    select,
+    input[type="date"],
+    input[type="submit"] {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    input[type="submit"] {
+        background-color: #F9D342;
+        color: #292826;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    input[type="submit"]:hover {
+        background-color: white;
+    }
+</style>
+
+{% endblock meta %} {% block content %}
+
+<body>
+    {% include 'navbar_atlet.html' %}
+    <div class="back">
+        <h1>DAFTAR SPONSOR</h1>
+        <form>
+            <label for="sponsor">Nama Sponsor :</label>
+            <select id="sponsor" name="sponsor">
+                <option value="sponsor1">Sponsor 1</option>
+                <option value="sponsor2">Sponsor 2</option>
+                <option value="sponsor3">Sponsor 3</option>
+            </select>
+            <label for="tgl_mulai">Tanggal Mulai :</label>
+            <input type="date" id="tgl_mulai" name="tgl_mulai">
+
+            <label for="tgl_selesai">Tanggal Selesai :</label>
+            <input type="date" id="tgl_selesai" name="tgl_selesai">
+
+            <input type="submit" value="SUBMIT">
+        </form>
+    </div>
+</body>
+
+
+{% endblock content %}
