@@ -31,7 +31,6 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
-        /*      padding: 10px;*/
     }
 
     .card {
@@ -97,7 +96,7 @@
         color: #000;
     }
 
-    .card {
+    .card .popup {
         background-color: rgba(0, 0, 0, 0.5);
         bottom: 0;
         display: none;
@@ -144,11 +143,14 @@
         transition: background-color 0.3s ease;
     }
 
-    .card {
+    .card .popup-button:hover {
         background-color: #ffd700;
         color: #000;
     }
 
+    .card.show-popup .popup {
+        display: block;
+    }
 </style>
 
 {% endblock meta %} {% block content %}
@@ -156,8 +158,8 @@
 <body>
     {% include 'navbar_atlet.html' %}
     <div class="back">
-        <h1>Event</h1>
-        <p>Berikut adalah event-event yang Anda ikuti</p>
+        <h1>Partai Kompetisi Event</h1>
+        <p>Berikut adalah partai kompetisi event yang Anda ikuti</p>
         <div class="container">
             {% for item in query %}
             <div class="card">
@@ -165,7 +167,7 @@
                     <h3><b>{{item.nama_event}}</b></h3>
                 </div>
                 <div class="content">
-                    <p><b>Tahun: {{item.tahun}}</b></p>
+                    <p><b>Tahun: {{item.tahun_event}}</b></p>
                     <p><b>Stadium: {{item.nama_stadium}}</b></p>
                     <p><b>Jenis Partai: {{item.jenis_partai}}</b></p>
                     <p><b>Hadiah: {{item.total_hadiah}} </b></p>
@@ -173,16 +175,11 @@
                     <p><b>Tanggal Mulai: {{item.tgl_mulai}} </b></p>
                     <p><b>Tanggal Selesai: {{item.tgl_selesai}} </b></p>
                     <br>
-                    <br>
-                    <br>
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        <input class="button" type="submit" value="Unenroll" name="{{item.nama_event}} {{item.tahun}} {{item.nomor_peserta}}"></input>
-                    </form>
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
 </body>
 
 

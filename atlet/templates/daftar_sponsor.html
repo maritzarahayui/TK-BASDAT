@@ -77,8 +77,8 @@
             <label for="sponsor">Nama Sponsor :</label>
             <select id="sponsor" name="sponsor" required>
                 <option value="" hidden>--</option>
-                {% for q in query%}
-                <option value="{{q.nama_brand}}">{{q.nama_brand}}</option>
+                {% for item in query%}
+                <option value="{{item.nama_brand}}">{{item.nama_brand}}</option>
                 {% endfor %}
             </select>
             <label for="tgl_mulai">Tanggal Mulai :</label>

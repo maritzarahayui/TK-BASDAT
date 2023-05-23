@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from collections import namedtuple
 from django.db import *
 import psycopg2
@@ -93,10 +93,106 @@ def daftar_event_detail(request):
 def pilih_kategori(request):
     return render(request, "pilih_kategori.html")
 
+def enrolled_partai_kompetisi(request):
+    # id = str(request.session["id"]).strip()
+    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
+    
+    query = get_query(
+        f'''SELECT par.nama_event, par.tahun_event, nama_stadium, par.jenis_partai, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai
+        FROM EVENT E, PARTAI_KOMPETISI par, PESERTA_KOMPETISI pes, PARTAI_PESERTA_KOMPETISI kom
+        WHERE pes.nomor_peserta = kom.nomor_peserta AND kom.jenis_partai = par.jenis_partai AND kom.nama_event = par.nama_event AND kom.tahun_event = par.tahun_event AND par.nama_event = e.nama_event AND e.tahun_event = par.tahun_event AND id_atlet_kualifikasi = '{id}';
+        '''
+    )
+    
+    if query == []:
+        id_ganda = get_query(
+            f'''SELECT id_atlet_ganda
+            FROM ATLET_GANDA
+            WHERE id_atlet_kualifikasi = '{id}' OR id_atlet_kualifikasi_2 = '{id}'
+            '''
+        )
+        
+        query = get_query(
+            f'''SELECT par.nama_event, par.tahun_event, nama_stadium, par.jenis_partai, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai
+            FROM EVENT E, PARTAI_KOMPETISI par, PESERTA_KOMPETISI pes, PARTAI_PESERTA_KOMPETISI kom
+            WHERE pes.nomor_peserta = kom.nomor_peserta AND kom.jenis_partai = par.jenis_partai AND kom.nama_event = par.nama_event AND kom.tahun_event = par.tahun_event AND par.nama_event = e.nama_event AND e.tahun_event = par.tahun_event AND id_atlet_ganda = '{id_ganda[0].id_atlet_ganda}';
+            '''
+        )
+    
+    return render(request, "enrolled_partai_kompetisi.html", {"query": query})
 
 def enrolled_event(request):
-    return render(request, "enrolled_event.html")
+    # id = str(request.session["id"]).strip()
+    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
+    # id = 'c2b8357e-7865-4939-8be0-97b283320eaf'
+    
+    query = get_query(
+        f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
+        FROM EVENT E, PESERTA_KOMPETISI pes, PESERTA_MENDAFTAR_EVENT rol
+        WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_kualifikasi = '{id}';
+        '''
+    )
+    
+    if query == []:
+        id_ganda = get_query(
+            f'''SELECT id_atlet_ganda
+            FROM ATLET_GANDA
+            WHERE id_atlet_kualifikasi = '{id}' OR id_atlet_kualifikasi_2 = '{id}'
+            '''
+        )
+        
+        query = get_query(
+            f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
+        FROM EVENT E, PESERTA_KOMPETISI pes, PESERTA_MENDAFTAR_EVENT rol
+        WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_ganda = '{id_ganda[0].id_atlet_ganda}';
+            '''
+        )
+    
+    if request.method != "POST":    
+        return render(request, "enrolled_event.html", {"query" : query})
+    
+    nama_tahun_nomor = request.POST.urlencode().split("&")[1].split("=")[0].split("+")
+    nama_event = ' '.join(nama_tahun_nomor[:-2])
+    tahun_event = nama_tahun_nomor[-2]
+    nomor_peserta = nama_tahun_nomor[-1]
 
+    delete = get_query(
+        f'''DELETE FROM PESERTA_MENDAFTAR_EVENT
+        WHERE nomor_peserta = '{nomor_peserta}' AND nama_event = '{nama_event}' AND tahun = '{tahun_event}'
+        ''')
+    
+    if (type(delete) != InternalError):
+        get_query(
+            f'''DELETE FROM PARTAI_PESERTA_KOMPETISI
+        WHERE nomor_peserta = '{nomor_peserta}' AND nama_event = '{nama_event}' AND tahun_event = '{tahun_event}'
+            '''
+        )
+        
+    print(delete)
+    
+    query = get_query(
+        f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
+        FROM EVENT E, PESERTA_KOMPETISI pes, PESERTA_MENDAFTAR_EVENT rol
+        WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_kualifikasi = '{id}';
+        '''
+    )
+    
+    if query == []:
+        id_ganda = get_query(
+            f'''SELECT id_atlet_ganda
+            FROM ATLET_GANDA
+            WHERE id_atlet_kualifikasi = '{id}' OR id_atlet_kualifikasi_2 = '{id}'
+            '''
+        )
+        
+        query = get_query(
+            f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
+        FROM EVENT E, PESERTA_KOMPETISI pes, PESERTA_MENDAFTAR_EVENT rol
+        WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_ganda = '{id_ganda[0].id_atlet_ganda}';
+            '''
+        )    
+    
+    return render(request, "enrolled_event.html", {"query" : query})
 
 def daftar_sponsor(request):
     # id = str(request.session["id"]).strip()
@@ -123,8 +219,6 @@ def daftar_sponsor(request):
         WHERE nama_brand = '{nama_brand}'
         '''
     )
-    
-    print(id_sponsor[0].id)
     
     get_query(
         f'''INSERT INTO atlet_sponsor
