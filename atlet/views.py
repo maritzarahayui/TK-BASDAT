@@ -108,20 +108,18 @@ def daftar_event(request):
         }
 
         return render(request, "daftar_event.html", context)
-
-# Halaman kemudian menampilkan daftar event yang akan
-# dilaksanakan di stadium tersebut (hanya tampilkan event yang
-# belum dimulai.).
+    
 
 # di dummy data tgl_mulai nya 2021/2022 semua jd wassalamualaikum alias kosong
 
-def daftar_event_detail(request):
+def daftar_event_detail(request, stadium_id):
     with connection.cursor() as cursor:
         cursor.execute(f"""
-            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries
-            FROM EVENT E, STADIUM S
-            WHERE S.nama = E.nama_stadium AND E.tgl_mulai > CURRENT_DATE
-        """)
+            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries, E.nama_stadium
+            FROM EVENT E
+            JOIN STADIUM S ON S.nama = E.nama_stadium
+            WHERE E.tgl_mulai > CURRENT_DATE AND S.nama = %s
+        """, [stadium_id])
         event_raw = cursor.fetchall()
 
         event = []
