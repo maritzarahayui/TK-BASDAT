@@ -26,6 +26,7 @@ def get_query(str):
         cursor.execute(str)
         result = namedtuplefetchall(cursor)
     except Exception as e:
+        # print("An exception occurred:", str(e))
         result = e
     finally:
         cursor.close()
@@ -83,11 +84,63 @@ def form_kualifikasi(request):
 
 
 def daftar_event(request):
-    return render(request, "daftar_event.html")
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+            SELECT E.nama_stadium, E.negara, S.kapasitas
+            FROM STADIUM S, EVENT E
+            WHERE S.nama = E.nama_stadium
+        """)
+        stadium_raw = cursor.fetchall()
 
+        stadium = []
+
+        for res in stadium_raw:
+            stadium.append(
+                {
+                    "nama_stadium": res[0],
+                    "negara": res[1],
+                    "kapasitas": res[2],
+                }
+            )
+
+        context = {
+            "stadium": stadium
+        }
+
+        return render(request, "daftar_event.html", context)
+
+# Halaman kemudian menampilkan daftar event yang akan
+# dilaksanakan di stadium tersebut (hanya tampilkan event yang
+# belum dimulai.).
+
+# di dummy data tgl_mulai nya 2021/2022 semua jd wassalamualaikum alias kosong
 
 def daftar_event_detail(request):
-    return render(request, "daftar_event_detail.html")
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries
+            FROM EVENT E, STADIUM S
+            WHERE S.nama = E.nama_stadium AND E.tgl_mulai > CURRENT_DATE
+        """)
+        event_raw = cursor.fetchall()
+
+        event = []
+
+        for res in event_raw:
+            event.append(
+                {
+                    "nama_event": res[0],
+                    "total_hadiah": res[1],
+                    "tgl_mulai": res[2],
+                    "kategori_superseries": res[3],
+                }
+            )
+
+        context = {
+            "event": event
+        }
+
+        return render(request, "daftar_event_detail.html", context)
 
 
 def pilih_kategori(request):

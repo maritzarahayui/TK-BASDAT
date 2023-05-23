@@ -12,7 +12,7 @@
 {% include 'navbar_atlet.html' %}
 
 <header>
-  <h1>Daftar Event</h1>
+  <h1>Daftar Stadium</h1>
 </header>
 <td class="align-middle">
   <div class="d-flex justify-content-center">
@@ -21,36 +21,33 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Nama Stadion</th>
+              <th scope="col">Nama Stadium</th>
               <th scope="col">Negara</th>
               <th scope="col">Kapasitas</th>
-              <th scope="col"></th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>GBK</td>
-              <td>Indonesia</td>
-              <td>8</td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">Pilih</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Senayan</td>
-              <td>Indonesia</td>
-              <td>16</td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">Pilih</button>
-              </td>
-            </tr>
-            <!-- Tambahkan lebih banyak baris untuk stadion lainnya di sini -->
+              {% for item in stadium %}
+                <tr>
+                  <td>{{item.nama_stadium}}</td>
+                  <td>{{item.negara}}</td>
+                  <td>{{item.kapasitas}}</td>
+
+                  <td>
+                    <a href="{% url 'atlet:daftar_event_detail' %}">
+                      <button type="button" class="btn btn-primary btn-dark">Pilih</button>
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </td>
+
 <style type="text/css">
   body {
     background-color: var(--dark);

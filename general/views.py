@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db import *
-from utils.query import query
+# from utils.query import query
 from django.views.decorators.csrf import csrf_exempt
 
 def verify(request):
@@ -32,18 +32,18 @@ def login_form(request):
             return redirect("/umpire")
     return render(request, "login.html")
 
-def get_role(email):
-    res = query(f"SELECT * FROM ADMIN WHERE EMAIL='{email}'")
-    if len(res) > 0:
-        return 'atlet'
+# def get_role(email):
+#     res = query(f"SELECT * FROM ADMIN WHERE EMAIL='{email}'")
+#     if len(res) > 0:
+#         return 'atlet'
     
-    res = query(f"SELECT * FROM customer WHERE EMAIL='{email}'")
-    if len(res) > 0:
-        return 'pelatih'
+#     res = query(f"SELECT * FROM customer WHERE EMAIL='{email}'")
+#     if len(res) > 0:
+#         return 'pelatih'
     
-    res = query(f"SELECT * FROM courier WHERE EMAIL='{email}'")
-    if len(res) > 0:
-        return 'umpire'
+#     res = query(f"SELECT * FROM courier WHERE EMAIL='{email}'")
+#     if len(res) > 0:
+#         return 'umpire'
     
 @csrf_exempt
 def login(request):
