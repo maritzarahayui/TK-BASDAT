@@ -12,5 +12,6 @@ urlpatterns = [
     path('hasil-pertandingan/', views.hasil_pertandingan,
          name="hasil_pertandingan"),
     path('dashboard/', views.dashboard_umpire, name="dashboard_umpire"),
-    path('list_event/', views.list_event, name="list_event")
+    path('list_event/', views.list_event, name="list_event"),
+    path('get_daftar_atlet/', views.get_daftar_atlet, name="get_daftar_atlet"),
 ]
