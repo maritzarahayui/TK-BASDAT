@@ -44,7 +44,47 @@ def hasil_pertandingan(request):
 
 
 def list_event(request):
-    return render(request, "list_event.html")
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+            SELECT DISTINCT E.Nama_event, E.Tahun_Event, E.Nama_stadium, PK.Jenis_partai,
+                E.Kategori_Superseries, E.Tgl_mulai, E.Tgl_selesai, S.Kapasitas, COUNT(PPK.nomor_peserta) as total_peserta
+            FROM EVENT E
+            JOIN PARTAI_KOMPETISI PK
+                ON E.Nama_event = PK.Nama_event
+                AND E.Tahun_Event = PK.Tahun_event
+            JOIN PARTAI_PESERTA_KOMPETISI PPK
+                ON PK.Nama_event = PPK.Nama_event
+                AND PK.Tahun_event = PPK.Tahun_event
+                AND PK.Jenis_partai = PPK.Jenis_partai
+            JOIN STADIUM S
+                ON E.Nama_stadium = S.Nama
+            GROUP BY E.Nama_event, E.Tahun_Event, E.Nama_stadium, PK.Jenis_partai,
+                E.Kategori_Superseries, E.Tgl_mulai, E.Tgl_selesai, S.Kapasitas;
+        """)
+        partai_kompetisi_event_raw = cursor.fetchall()
+
+        partai_kompetisi_event = []
+
+        for res in partai_kompetisi_event_raw:
+            partai_kompetisi_event.append(
+                {
+                    "nama_event": res[0],
+                    "tahun": res[1],
+                    "stadium": res[2],
+                    "jenis_partai": res[3],
+                    "kategori_superseries": res[4],
+                    "tanggal_mulai": res[5].strftime("%d %B %Y"),
+                    "tanggal_selesai": res[6].strftime("%d %B %Y"),
+                    "kapasitas": res[7],
+                    "total_peserta": res[8]
+                }
+            )
+
+        context = {
+            "partai_kompetisi_event": partai_kompetisi_event
+        }
+
+        return render(request, "list_event.html", context)
 
 
 def get_daftar_atlet(request):
