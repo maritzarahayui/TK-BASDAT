@@ -12,6 +12,7 @@ urlpatterns = [
     path('daftar-event-detail/', views.daftar_event_detail,
          name="daftar_event_detail"),
     path('pilih-kategori/', views.pilih_kategori, name="pilih_kategori"),
+    path('enrolled_partai_kompetisi/', views.enrolled_partai_kompetisi, name="enrolled_partai_kompetisi"),
     path('enrolled_event/', views.enrolled_event, name="enrolled_event"),
     path('daftar_sponsor/', views.daftar_sponsor, name="daftar_sponsor"),
     path('list_sponsor/', views.list_sponsor, name="list_sponsor"),

@@ -97,7 +97,7 @@
         color: #000;
     }
 
-    .card .popup {
+    .card {
         background-color: rgba(0, 0, 0, 0.5);
         bottom: 0;
         display: none;
@@ -144,14 +144,11 @@
         transition: background-color 0.3s ease;
     }
 
-    .card .popup-button:hover {
+    .card {
         background-color: #ffd700;
         color: #000;
     }
 
-    .card.show-popup .popup {
-        display: block;
-    }
 </style>
 
 {% endblock meta %} {% block content %}
@@ -159,51 +156,33 @@
 <body>
     {% include 'navbar_atlet.html' %}
     <div class="back">
-        <h1>EVENT</h1>
+        <h1>Event</h1>
         <p>Berikut adalah event-event yang Anda ikuti</p>
         <div class="container">
+            {% for item in query %}
             <div class="card">
                 <div class="thumbnail">
-                    <h3><b>Indonesia Open </b></h3>
+                    <h3><b>{{item.nama_event}}</b></h3>
                 </div>
                 <div class="content">
-                    <p><b>Stadium: Senayan</b></p>
-                    <p><b>Hadiah: 1500000000 </b></p>
-                    <p><b>Kategori Superseries: S1000</b></p>
-                    <p><b>Kategori Spesialisasi: Tunggal Putra</b></p>
-                    <p><b>Tanggal Mulai: 1/7/2021 </b></p>
-                    <p><b>Tanggal Selesai: 1/14/2021 </b></p>
-                    <p><b>Kapasitas: 2000</b></p>
+                    <p><b>Tahun: {{item.tahun}}</b></p>
+                    <p><b>Stadium: {{item.nama_stadium}}</b></p>
+                    <p><b>Jenis Partai: {{item.jenis_partai}}</b></p>
+                    <p><b>Hadiah: {{item.total_hadiah}} </b></p>
+                    <p><b>Kategori Superseries: {{item.kategori_superseries}}</b></p>
+                    <p><b>Tanggal Mulai: {{item.tgl_mulai}} </b></p>
+                    <p><b>Tanggal Selesai: {{item.tgl_selesai}} </b></p>
                     <br>
                     <br>
                     <br>
-                    <button class="button" onclick="showPopup()">Unenrolled</button>
-                    <div class="popup">
-                        <div class="popup-content">
-                            <h2>Are you sure you want to unenroll from this event?</h2>
-                            <div class="popup-buttons">
-                                <button class="popup-button" onclick="hidePopup()">Cancel</button>
-                                <button class="popup-button" onclick="unenroll()">Unenroll</button>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input class="button" type="submit" value="Unenroll" name="{{item.nama_event}} {{item.tahun}} {{item.nomor_peserta}}"></input>
+                    </form>
                 </div>
             </div>
-
-            <script>
-                function showPopup() {
-                    document.querySelector('.card').classList.add('show-popup');
-                }
-                function hidePopup() {
-                    document.querySelector('.card').classList.remove('show-popup');
-                }
-
-                function unenroll() {
-                    // code to remove event data from database
-                    alert('You have successfully unenrolled from this event.');
-                    hidePopup();
-                }
-            </script>
+            {% endfor %}
 </body>
 
 
