@@ -1,3 +1,5 @@
+{% extends 'navbar_atlet.html' %}
+
 {% load static %}
 
 {% block meta %}
@@ -23,7 +25,7 @@
             <a href="" class="nav-item nav-link">Enrolled Event</a>
             <a href="" class="nav-item nav-link">Daftar Sponsor</a>
         </div>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
 </nav>
 
