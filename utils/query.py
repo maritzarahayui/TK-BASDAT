@@ -17,6 +17,19 @@ try:
     connection.autocommit = True
     cursor = connection.cursor()
 
+        # Print PostgreSQL details
+    print("PostgreSQL server information")
+    print(connection.get_dsn_parameters(), "\n")
+
+    # Executing a SQL query
+    cursor.execute("SELECT version();")
+
+    # Fetch result
+    record = cursor.fetchone()
+    print("You are connected to - ", record, "\n")
+
+    cursor.execute("SET search_path TO PUBLIC;")
+
 except (Exception, Error) as error:
     print("Error while connecting to PostgreSQL", error)
 
@@ -31,7 +44,7 @@ def map_cursor(cursor):
 def query(query_str: str):
     hasil = []
     with connection.cursor(cursor_factory=RealDictCursor) as cursor:
-        cursor.execute("SET SEARCH_PATH TO SIREST")
+        cursor.execute("SET SEARCH_PATH TO PUBLIC;")
         try:
             cursor.execute(query_str)
 
@@ -47,4 +60,22 @@ def query(query_str: str):
             hasil = e
 
     return hasil
+
+def exec(query):
+    query = query.strip()
+    if not (query.endswith(";")):
+        query += ";"
+    cursor.execute(query)
+    if (query.upper().startswith("SELECT")):
+        return cursor.fetchall()
+    elif (query.upper().startswith("INSERT")) or (query.upper().startswith("UPDATE")) or (query.upper().startswith("CREATE")):
+        connection.commit()
+
+def try_exec(query):
+    try:
+        return False, exec(query)
+    except (Exception, Error) as error:
+        connection.rollback()
+        cursor.execute("SET SEARCH_PATH TO PUBLIC;")
+        return True, error
 	
