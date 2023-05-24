@@ -60,52 +60,49 @@
   <div class="back">
     <div class="wrapper">
       <div class="card">
-        <!-- <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/11501/production/_129031907_podiumgandaputra3_final_ae2023_pbsi_20230319.jpg" alt="" width="500" height="200" /> -->
         <div id="container">
-          <h4 id="name">HASIL PERTANDINGAN ALL ENGLAND 2023</h4>
+          {% for event in info_pertandingan %}
+          <h4 id="name">Hasil Pertandingan {{ event.jenis_partai }} - {{ event.nama_event }}</h4>
+          {% endfor %}
 
           <table class="table" style="color: #292826;">
-            <!-- <thead class="thead-light" style="background-color: white; color: #000;">
-              <tr>
-                <th scope="col">Tim 1</th>
-                <th scope="col">Tim 2</th>
-              </tr>
-            </thead> -->
             <tbody>
+              {% for event in info_pertandingan %}
               <tr>
                 <td id="judul">Nama Event</td>
-                <td id="isi">ALL ENGLAND 2023</td>
+                <td id="isi">{{ event.nama_event }}</td>
               </tr>
 
               <tr>
                 <td id="judul">Stadium</td>
-                <td id="isi">Utilita Arena Birmingham</td>
+                <td id="isi">{{event.nama_stadium}}</td>
               </tr>
 
               <tr>
                 <td id="judul">Hadiah</td>
-                <td id="isi">$1.250.000</td>
+                <td id="isi">{{event.total_hadiah}}</td>
               </tr>
 
               <tr>
                 <td id="judul">Kategori Superseries</td>
-                <td id="isi">S1000</td>
+                <td id="isi">{{event.kategori_superseries}}</td>
               </tr>
 
               <tr>
                 <td id="judul">Tanggal Mulai</td>
-                <td id="isi">14 Maret 2023</td>
+                <td id="isi">{{event.tanggal_mulai}}</td>
               </tr>
 
               <tr>
                 <td id="judul">Tanggal Selesai</td>
-                <td id="isi">19 Maret 2023</td>
+                <td id="isi">{{event.tanggal_selesai}}</td>
               </tr>
 
               <tr>
                 <td id="judul">Kapasitas</td>
-                <td id="isi">15.000 pengunjung</td>
+                <td id="isi">{{event.kapasitas}}</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -126,27 +123,45 @@
         <tbody>
           <tr>
             <td>Juara 1</td>
-            <td>A</td>
+            {% for juara in juara_satu_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_satu_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
             <td>Juara 2</td>
-            <td>G</td>
+            {% for juara in juara_dua_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_dua_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
             <td>Juara 3</td>
-            <td>D</td>
+            {% for juara in juara_tiga_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_tiga_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
             <td>Semifinal</td>
-            <td>E</td>
+            {% for juara in semifinal_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in semifinal_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
-            <!-- This cell will take up
-            space on two rows -->
             <td rowspan="4">Perempat Final</td>
             <td>C</td>
           </tr>
@@ -173,6 +188,10 @@
     padding: 0;
     font-family: 'Roboto', sans-serif;
   }
+
+  /* tbody {
+    padding: auto;
+  } */
 
   .back {
     /* max-width: 1200px; */
@@ -377,14 +396,14 @@
     padding: 8px;
   }
 
-  .table {
+  /* .table {
     margin-left: 40px;
     margin-right: 40px;
-  }
+  } */
 
-  img {
+  /* img {
     border-radius: 12px;
-  }
+  } */
 
   #table-hasil {
     margin-top: 200px;

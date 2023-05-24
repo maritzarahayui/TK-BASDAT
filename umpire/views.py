@@ -5,18 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from uuid import uuid1
 from utils.query import *
-
-# import psycopg2
-
-
-# def connectDb():
-#     return psycopg2.connect(
-#         user='postgres',
-#         password='VqhDHXgGPL8avdUHqCWP',
-#         host='containers-us-west-72.railway.app',
-#         databases='railway',
-#         port='7729',
-#     )
+from urllib.parse import unquote
 
 
 def register_umpire(request):
@@ -29,17 +18,32 @@ def register_umpire(request):
         check_mail = exec(f"""SELECT * FROM MEMBER WHERE email='{email}'""")
         if check_mail:
             msg = "Email sudah terdaftar"
-            return render(request, "register_umpire.html", {"msg":msg})
+            return render(request, "register_umpire.html", {"msg": msg})
         else:
-            exec(f"""INSERT INTO MEMBER VALUES ('{id}', '{name}', '{email}')""")
+            exec(
+                f"""INSERT INTO MEMBER VALUES ('{id}', '{name}', '{email}')""")
             exec(f"""INSERT INTO UMPIRE VALUES ('{id}', '{negara}')""")
-            return render(request, 'register_umpire.html', {"msg":"Berhasil mendaftar"})
+            return render(request, 'register_umpire.html', {"msg": "Berhasil mendaftar"})
 
     return render(request, "register_umpire.html")
 
 
 def dashboard_umpire(request):
-    return render(request, "dashboard_umpire.html")
+    nama = request.session["nama"]
+    email = request.session["email"]
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+        SELECT negara FROM MEMBER M, UMPIRE U WHERE M.ID=U.ID AND M.nama='{nama}' AND M.email='{email}';
+        """)
+        result = cursor.fetchone()
+        negara = result[0]
+
+    context = {
+        "nama": nama,
+        "email": email,
+        "negara": negara
+    }
+    return render(request, "dashboard_umpire.html", context)
 
 
 def pertandingan_page(request):
@@ -59,8 +63,267 @@ def final_page(request):
 
 
 def hasil_pertandingan(request):
+    nama_event = unquote(request.GET.get("nama_event"))
+    tahun_event = request.GET.get("tahun_event")
+    jenis_partai = request.GET.get("jenis_partai")
+    pprint(nama_event)
+    pprint(tahun_event)
+    pprint(jenis_partai)
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+        SELECT PK.Jenis_partai, E.Nama_event, E.Nama_stadium, E.total_hadiah,
+        E.Kategori_Superseries, E.Tgl_mulai, E.Tgl_selesai, S.Kapasitas
+        FROM EVENT E
+        JOIN PARTAI_KOMPETISI PK ON E.Nama_event = PK.Nama_event AND E.Tahun_Event = PK.Tahun_event
+        JOIN STADIUM S ON E.Nama_stadium = S.Nama
+        WHERE PK.Jenis_partai = '{jenis_partai}'
+        AND PK.Nama_event = '{nama_event}'
+        AND PK.Tahun_event = '{tahun_event}';
+        """)
+
+        info_pertandingan_raw = cursor.fetchall()
+        info_pertandingan = []
+        for res in info_pertandingan_raw:
+            info_pertandingan.append(
+                {
+                    "jenis_partai": res[0],
+                    "nama_event": res[1],
+                    "nama_stadium": res[2],
+                    "total_hadiah": res[3],
+                    "kategori_superseries": res[4],
+                    "tanggal_mulai": res[5],
+                    "tanggal_selesai": res[6],
+                    "kapasitas": res[7],
+                }
+            )
+
+        # pprint(info_pertandingan)
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AG.ID_ATLET_KUALIFIKASI
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        OR ID IN
+        (SELECT AG.ID_ATLET_KUALIFIKASI_2
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}');
+        """)
+
+        juara_satu_ganda_raw = cursor.fetchall()
+        juara_satu_ganda = []
+        for res in juara_satu_ganda_raw:
+            juara_satu_ganda.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+    # pprint(juara_satu_ganda)
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AK.ID_ATLET
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        """)
+
+        juara_satu_tunggal_raw = cursor.fetchall()
+        juara_satu_tunggal = []
+        for res in juara_satu_tunggal_raw:
+            juara_satu_tunggal.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AG.ID_ATLET_KUALIFIKASI
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        OR ID IN
+        (SELECT AG.ID_ATLET_KUALIFIKASI_2
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}');
+        """)
+
+        juara_dua_ganda_raw = cursor.fetchall()
+        juara_dua_ganda = []
+        for res in juara_dua_ganda_raw:
+            juara_dua_ganda.append(
+                {
+                    "atlet": res[0]
+                }
+            )
     
-    return render(request, "hasil_pertandingan.html")
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AK.ID_ATLET
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
+        WHERE PMG.JENIS_BABAK = 'FINAL'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        """)
+
+        juara_dua_tunggal_raw = cursor.fetchall()
+        juara_dua_tunggal = []
+        for res in juara_dua_tunggal_raw:
+            juara_dua_tunggal.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AG.ID_ATLET_KUALIFIKASI
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        OR ID IN
+        (SELECT AG.ID_ATLET_KUALIFIKASI_2
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}');
+        """)
+
+        juara_tiga_ganda_raw = cursor.fetchall()
+        juara_tiga_ganda = []
+        for res in juara_tiga_ganda_raw:
+            juara_tiga_ganda.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AK.ID_ATLET
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = TRUE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        """)
+
+        juara_tiga_tunggal_raw = cursor.fetchall()
+        juara_tiga_tunggal = []
+        for res in juara_tiga_tunggal_raw:
+            juara_tiga_tunggal.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AG.ID_ATLET_KUALIFIKASI
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        OR ID IN
+        (SELECT AG.ID_ATLET_KUALIFIKASI_2
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}');
+        """)
+
+        semifinal_ganda_raw = cursor.fetchall()
+        semifinal_ganda = []
+        for res in semifinal_ganda_raw:
+            semifinal_ganda.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AK.ID_ATLET
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
+        WHERE PMG.JENIS_BABAK = 'SF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        """)
+
+        semifinal_tunggal_raw = cursor.fetchall()
+        semifinal_tunggal = []
+        for res in semifinal_tunggal_raw:
+            semifinal_tunggal.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+    context = {
+        'info_pertandingan': info_pertandingan,
+        'juara_satu_ganda': juara_satu_ganda,
+        'juara_satu_tunggal': juara_satu_tunggal,
+        'juara_dua_ganda': juara_dua_ganda,
+        'juara_dua_tunggal': juara_dua_tunggal,
+        'juara_tiga_ganda': juara_tiga_ganda,
+        'juara_tiga_tunggal': juara_tiga_tunggal,
+        'semifinal_ganda': semifinal_ganda,
+        'semifinal_tunggal': semifinal_tunggal,
+    }
+    return render(request, "hasil_pertandingan.html", context)
 
 
 def list_event(request):
