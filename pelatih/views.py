@@ -13,17 +13,77 @@ def register_pelatih(request):
 def dashboard_pelatih(request):
     return render(request, "dashboard_pelatih.html")
 
+# @login_required
+@csrf_exempt
+def daftar_atlet(request):
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        nama_pelatih = request.session["nama"]
+        id_atlet = request.POST.get("id_atlet")
 
+        cursor.execute(
+            f"""
+            SELECT ID FROM MEMBER WHERE NAMA = '{nama_pelatih}';
+            """
+        )
+
+        id_peletih = cursor.fetchone()[0]
+
+        if id_atlet:
+            cursor.execute(
+                f"""
+                INSERT INTO ATLET_PELATIH VALUES ('{id_peletih}', '{id_atlet}');
+                """
+            )
+
+            return redirect("/pelatih/list-atlet")
+
+    cursor.execute(
+        f"""
+        SELECT M.Nama, M.id FROM MEMBER M, ATLET A WHERE M.ID=A.ID ORDER BY M.nama;
+        """
+    )
+
+    result = cursor.fetchall()
+
+    daftar_atlet = []
+
+    for res in result:
+        daftar_atlet.append(
+            {
+                "nama_atlet": res[0],
+                "id_atlet": res[1]
+            }
+        )
+
+    context = {
+        "daftar_atlet": daftar_atlet
+    }
+
+    return render(request, 'daftar_atlet.html', context)
+
+# @login_required
 def list_atlet(request):
     nama_pelatih = request.session["nama"]
-    with connection.cursor() as cursor:
-        cursor.execut = ("""
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f"""
+        select id from member m where m.nama = '{nama_pelatih}'
+        """
+    )
+
+    id_pelatih = cursor.fetchone()[0]
+
+    cursor.execute(f"""
                         SELECT MA.Nama, MA.Email, A.World_rank
                         FROM MEMBER MA
                         JOIN ATLET A ON MA.ID = A.ID
                         JOIN ATLET_PELATIH AP ON A.ID = AP.ID_Atlet
                         JOIN PELATIH P ON AP.ID_Pelatih = P.ID
-                        WHERE MA.Nama = '{}'""".format(nama_pelatih))
+                        WHERE p.id= '{id_pelatih}'""")
+
     latih_atlet_raw = cursor.fetchall()
 
     latih_atlet = []
@@ -41,31 +101,3 @@ def list_atlet(request):
         "latih_atlet": latih_atlet
     }
     return render(request, "list_atlet.html", context)
-
-
-def daftar_atlet(request):
-    if request.method == 'POST':
-        # list_atlet = query(
-        #     "SELECT M.Nama FROM MEMBER M, ATLET A WHERE M.ID=A.ID;")
-        # context = {
-        #     "list_atlet": list_atlet,
-        #     "fail": False
-        # }
-        # return render(request, "daftar_atlet.html", context)
-
-        nama_atlet = request.POST.get("nama_atlet")
-        if not nama_atlet:
-            list_atlet = query(
-                "SELECT M.Nama FROM MEMBER M, ATLET A WHERE M.ID=A.ID;")
-            context = {
-                "list_atlet": list_atlet,
-            }
-            return render(request, "daftar_atlet.html", context)
-
-    nama_pelatih = request.session["nama"]
-    id_pelatih = str(query(
-        f"SELECT P.ID FROM MEMBER M, PELATIH P WHERE M.ID=P.ID AND M.Nama='{nama_pelatih}';")[0]["id"])
-    id_atlet = str(query(
-        f"SELECT A.ID FROM MEMBER M, ATLET A WHERE M.ID=A.ID AND M.Nama='{nama_atlet}';")[0]["id"])
-    query(f"INSERT INTO ATLET_PELATIH VALUES ('{id_pelatih}', '{id_atlet}');")
-    return redirect('/pelatih/list-atlet')
