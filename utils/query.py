@@ -9,7 +9,7 @@ try:
         user='postgres',
         password='VqhDHXgGPL8avdUHqCWP',
         host='containers-us-west-72.railway.app',
-        databases='railway',
+        database='railway',
         port='7729',
     )
 
@@ -78,4 +78,13 @@ def try_exec(query):
         connection.rollback()
         cursor.execute("SET SEARCH_PATH TO PUBLIC;")
         return True, error
-	
+
+def lst_of_tup_to_lst_of_lst(lst_of_tup):
+    lst_of_lst = []
+    for tup in lst_of_tup:
+        lst_of_lst.append(list(tup))
+    return lst_of_lst
+
+if __name__ == '__main__':
+    error, hasil = try_exec("SELECT * FROM MEMBER;")
+    print(hasil)
