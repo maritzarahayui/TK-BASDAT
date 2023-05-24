@@ -3,6 +3,8 @@ from django.db import connection
 from pprint import pprint
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from uuid import uuid1
+from utils.query import *
 
 # import psycopg2
 
@@ -18,6 +20,21 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def register_umpire(request):
+    if request.method == "post".upper():
+        id = uuid1()
+        name = request.POST.get("nama")
+        email = request.POST.get("email")
+        negara = request.POST.get("negara")
+
+        check_mail = exec(f"""SELECT * FROM MEMBER WHERE email='{email}'""")
+        if check_mail:
+            msg = "Email sudah terdaftar"
+            return render(request, "register_umpire.html", {"msg":msg})
+        else:
+            exec(f"""INSERT INTO MEMBER VALUES ('{id}', '{name}', '{email}')""")
+            exec(f"""INSERT INTO UMPIRE VALUES ('{id}', '{negara}')""")
+            return render(request, 'register_umpire.html', {"msg":"Berhasil mendaftar"})
+
     return render(request, "register_umpire.html")
 
 
