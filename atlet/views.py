@@ -2,6 +2,8 @@ from django.shortcuts import render
 from collections import namedtuple
 from django.db import *
 import psycopg2
+from uuid import uuid1
+from utils.query import *
 
 def connectDb():
     return psycopg2.connect(
@@ -33,6 +35,46 @@ def get_query(str):
         return result
 
 def register_atlet(request):
+    if request.method == "post".upper():
+        id = uuid1()
+        nama = request.POST.get("nama")
+        email = request.POST.get("email")
+        negara = request.POST.get("negara")
+        tgl_lahir = request.POST.get("tanggal-lahir")
+        if request.POST.get('question1') == "on":
+            play = False
+        else:
+            play = True
+        tinggi = request.POST.get("tinggi-badan")
+        if request.POST.get('question2') == "on":
+            kelamin = True
+        else:
+            kelamin = False
+        
+        error, check_mail = try_exec(f"SELECT * FROM member WHERE email = '{email}'")
+        if check_mail:
+            msg = "Email sudah terdaftar"
+            return render(request, "register_atlet.html", {"msg": msg})
+        else:
+            error, res = try_exec(f"INSERT INTO member VALUES ('{id}', '{nama}', '{email}')")
+            if error: 
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            error, res = try_exec(f"INSERT INTO atlet VALUES ('{id}', '{tgl_lahir}', '{negara}', {play}, '{tinggi}', null,{kelamin})")
+            print(f"INSERT INTO atlet VALUES ('{id}', '{tgl_lahir}', '{negara}', {play}, '{tinggi}', null,{kelamin})")
+            if error:
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            error, res = try_exec(f"INSERT INTO atlet_non_kualifikasi VALUES ('{id}')")
+            if error: 
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            return render(request, "register_atlet.html", {"msg": "Berhasil mendaftar"})
+
+
     return render(request, "register_atlet.html")
 
 
