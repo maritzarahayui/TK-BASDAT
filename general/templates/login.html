@@ -9,11 +9,10 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- <script src="{% static 'scripts/login.js' %}"></script> -->
 <script>
     function submitLogin() {
+        event.preventDefault();
         console.log($("#nama").val())
-
         $.ajax({
             url: '/login/auth',
             data: {
@@ -23,31 +22,28 @@
             dataType: 'json',
             success: function (data) {
                 if(data.status === 'success') {
-                    window.location.href = '/';
+                    window.location.href = '/' + data.role;
                 } else {
-                    alert("Email atau password yang Anda masukan salah!");
+                    $("#statusMessage").text("Email atau password yang Anda masukkan salah!");
                 }
             }
         });
     }
+
 </script>
 {% endblock meta %}
 
 {% block content %}
 
-    <!-- <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div> -->
     <form id="loginForm">
+        {% csrf_token %}
         <h3>Login</h3>
         <label for="nama">Nama</label>
         <input type="text" placeholder="Nama" id="nama">
         <label for="email">Email</label>
         <input type="text" placeholder="Email" id="email">
-        <!-- <br>
-        <p>"Email atau password yang Anda masukan salah!</p> -->
-        <button type="submit" style="background-color: #ebce46" onclick="submitLogin()">Log In</button>
+        <p id="statusMessage" style="font-size: 11px;"></p>
+        <button  style="background-color: #ebce46" onclick="submitLogin()">Log In</button>
     </form>
 
 

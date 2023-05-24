@@ -27,8 +27,8 @@
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <div class="navbar-nav ms-auto py-0 pe-4">
       <a href="" class="nav-item nav-link">Dashboard</a>
-      <a href="" class="nav-item nav-link active">Tes Kualifikasi</a>
-      <a href="" class="nav-item nav-link">Daftar Event</a>
+      <a href="" class="nav-item nav-link">Tes Kualifikasi</a>
+      <a href="" class="nav-item nav-link active">Daftar Event</a>
       <a href="" class="nav-item nav-link">Enrolled Event</a>
       <a href="" class="nav-item nav-link">Daftar Sponsor</a>
     </div>
@@ -51,36 +51,31 @@
               <th scope="col">Total Hadiah</th>
               <th scope="col">Tanggal Mulai</th>
               <th scope="col">Kategori</th>
-              <th scope="col">Kapasitas</th>
-              <th scope="col"></th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>EventA</td>
-              <td>Rp 5.000.000</td>
-              <td>12-04-2023</td>
-              <td>S200</td>
-              <td>3/8</td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">Pilih</button>
-              </td>
-            </tr>
-            <tr>
-              <td>EventB</td>
-              <td>Rp 4.000.000</td>
-              <td>27-07-2023</td>
-              <td>S100</td>
-              <td>8/8</td>
-              <td></td>
-            </tr>
-            <!-- Tambahkan lebih banyak baris untuk event lainnya di sini -->
+            {% for item in event %}
+              <tr>
+                <td>{{item.nama_event}}</td>
+                <td>{{item.total_hadiah}}</td>
+                <td>{{item.tgl_mulai}}</td>
+                <td>{{item.kategori_superseries}}</td>
+
+                <td>
+                  <a href="{% url 'umpire:list_event' %}">
+                    <button type="button" class="btn btn-primary btn-dark">Pilih</button>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </td>
+
 <style type="text/css">
   body {
     background-color: var(--dark);
