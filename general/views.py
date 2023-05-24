@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.db import *
 from utils.query import query
 from django.views.decorators.csrf import csrf_exempt
+from utils.query import *
 
 
 def home(request):
