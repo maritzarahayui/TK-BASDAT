@@ -43,9 +43,33 @@ def register_pelatih(request):
             return render(request, 'register_pelatih.html', {"msg":"Berhasil mendaftar"})
     return render(request, "register_pelatih.html")
 
-
+# tanpa negara
 def dashboard_pelatih(request):
-    return render(request, "dashboard_pelatih.html")
+    nama = request.session["nama"]
+    email = request.session["email"]
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+        SELECT tanggal_mulai FROM MEMBER M, PELATIH P WHERE M.ID=P.ID AND M.nama='{nama}' AND M.email='{email}';
+        """)
+        result = cursor.fetchone()
+        tanggal_mulai = result[0].strftime("%d %B %Y")
+
+        cursor.execute(f"""
+        SELECT S.spesialisasi 
+        FROM SPESIALISASI S, MEMBER M, PELATIH P, PELATIH_SPESIALISASI PS
+        WHERE S.id = PS.id_spesialisasi AND P.id = PS.id_pelatih AND
+        M.ID=P.ID AND M.nama='{nama}' AND M.email='{email}';
+        """)
+        result = cursor.fetchone()
+        kategori_spesialisasi = result[0]
+
+    context = {
+        "nama": nama,
+        "email": email,
+        "tanggal_mulai": tanggal_mulai,
+        'kategori_spesialisasi': kategori_spesialisasi,
+    }
+    return render(request, "dashboard_pelatih.html", context)
 
 # @login_required
 @csrf_exempt

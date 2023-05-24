@@ -95,9 +95,15 @@
                             <a href="{% url 'umpire:pertandingan_page' %}">
                                 <button type="button" class="btn">Mulai</button>
                             </a>
-                            <a href="{% url 'umpire:hasil_pertandingan' %}">
+                            <!-- <a href="{% url 'umpire:hasil_pertandingan' %}">
                                 <button type="button" class="btn">Hasil Pertandingan</button>
-                            </a>
+                            </a> -->
+                            <form action="{% url 'umpire:hasil_pertandingan' %}" method="get">
+                                <input type="hidden" name="nama_event" value="{{ event.nama_event|urlencode }}">
+                                <input type="hidden" name="tahun_event" value="{{ event.tahun|urlencode }}">
+                                <input type="hidden" name="jenis_partai" value="{{ event.jenis_partai|urlencode }}">
+                                <button type="submit" class="btn btn-primary">Hasil Pertandingan</button>
+                            </form>
                             {% endif %}
                         </td>
                     </tr>
