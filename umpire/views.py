@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db import connection
 from pprint import pprint
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 # import psycopg2
 
@@ -40,6 +42,7 @@ def final_page(request):
 
 
 def hasil_pertandingan(request):
+    
     return render(request, "hasil_pertandingan.html")
 
 

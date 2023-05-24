@@ -1,16 +1,16 @@
-{% block content %} {% load static %} {% block meta %}
-<link
+{% extends 'base.html' %} {% block meta %}
+<!-- <link
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
   rel="stylesheet"
   integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
   crossorigin="anonymous"
 />
 <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-<title>List Atlet</title>
+<title>List Atlet</title> -->
 {% endblock meta %}
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
   <a href="" class="navbar-brand p-0">
       <h1 class="text-title m-0">Babadu</h1>
   </a>
@@ -25,43 +25,47 @@
       </div>
       <a href="" class="btn btn-logout py-2 px-4">Logout</a>
   </div>
-</nav>
+</nav> -->
 
-<header>
-  <h1>List Atlet</h1>
-</header>
-<td class="align-middle">
-  <div class="d-flex justify-content-center">
-    <div class="card" >
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">Nama Atlet</th>
-                <th scope="col">Email</th>
-                <th scope="col">World rank</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Sukiman1</td>
-                <td>Sukiman1@gmail.com</td>
-                <td>1</td>
-              </tr>
-              <tr>
-                <td>Sukiman2</td>
-                <td>Sukiman2@gmail.com</td>
-                <td>2</td>
-              </tr>
-              <!-- Tambahkan lebih banyak baris untuk atlet lainnya di sini -->
-            </tbody>
-          </table>
+<body>
+  <!-- <header>
+    <h1>List Atlet</h1>
+  </header> -->
+  {% include 'navbar_atlet.html' %}
+  <h1>Daftar Atlet Nonkualifikasi</h1>
+  <td class="align-middle">
+    <div class="d-flex justify-content-center">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Nama Atlet</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">World rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for atlet in latih_atlet %}
+                <tr>
+                  <td>{{ atlet.nama }}</td>
+                  <td>{{ atlet.email }}</td>
+                  {% if atlet.world_rank %}
+                  <td>{{ atlet.world_rank }}</td>
+                  {% else %}
+                  <td>-</td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</td>
+  </td>
+</body>
 <style type="text/css">
   body {
     background-color: var(--dark);
