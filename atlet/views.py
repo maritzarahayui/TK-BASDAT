@@ -215,7 +215,7 @@ def tes_kualifikasi(request):
             print("nooo ga lulus:(")
         print(score)
         return redirect("/atlet/riwayat_ujian_kualifikasi")
-    return render(request, "riwayat_ujian_kualifikasi.html")
+    return render(request, "tes_Kualifikasi.html")
 
 
 def list_ujian_kualifikasi_atlet(request):
