@@ -677,7 +677,7 @@ def daftar_sponsor(request):
         return render(request, "daftar_sponsor.html", {"query":query})
     
     nama_brand = request.POST["sponsor"]
-    tgl_mulai = request.POST["tgl_selesai"]
+    tgl_mulai = request.POST["tgl_mulai"]
     tgl_selesai = request.POST["tgl_selesai"]
     
     id_sponsor = get_query(
