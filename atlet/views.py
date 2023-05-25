@@ -343,7 +343,7 @@ def daftar_event_detail(request, stadium_id):
             SELECT DISTINCT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries, E.nama_stadium
             FROM EVENT E
             JOIN STADIUM S ON S.nama = E.nama_stadium
-            WHERE E.tgl_mulai > CURRENT_DATE AND  S.nama = %s
+            WHERE S.nama = %s
         """, [stadium_id])
         event_raw = cursor.fetchall()
 
@@ -475,7 +475,7 @@ def pilih_kategori(request, event_id):
 
     with connection.cursor() as cursor:
         cursor.execute(f"""
-            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.tgl_selesai, E.kategori_superseries, S.kapasitas, E.nama_stadium, E.negara
+            SELECT DISTINCT E.nama_event, E.total_hadiah, E.tgl_mulai, E.tgl_selesai, E.kategori_superseries, S.kapasitas, E.nama_stadium, E.negara
             FROM EVENT E
             JOIN STADIUM S ON S.nama = E.nama_stadium
             WHERE E.nama_event = %s

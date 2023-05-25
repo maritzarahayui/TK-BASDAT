@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['tk-basdat-production-b5f4.up.railway.app', '*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -146,3 +145,5 @@ for directory in [*STATICFILES_DIRS, STATIC_ROOT]:
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
