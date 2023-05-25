@@ -7,8 +7,6 @@
     }
 
     .back {
-        /* max-width: 1200px; */
-        /* margin: 0 auto; */
         padding: 60px;
         text-align: center;
         background-color: #292826;
@@ -17,7 +15,7 @@
     .back h1 {
         font-size: 48px;
         color: #F9D342;
-        margin-top: 40px;
+        margin-top: 15px;
     }
 
     .back p {
@@ -154,7 +152,19 @@
 {% endblock meta %} {% block content %}
 
 <body>
-    {% include 'navbar_atlet.html' %}
+{% include 'navbar_atlet.html' %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="True">&times;</span>
+        </button>
+        {{ message }}
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
     <div class="back">
         <h1>Event</h1>
         <p>Berikut adalah event-event yang Anda ikuti</p>
