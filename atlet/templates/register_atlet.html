@@ -14,47 +14,50 @@
 
 {% block content %}
 
-    <!-- <div class="background">
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div> -->
-
-    <form id="mainwrapper">
+    <form id="mainwrapper" method="POST">
+        {% csrf_token %}
         <h3>Register Atlet</h3>
 
+        {% if msg != "" %}
+		<div class="alert alert-warning" role="alert">
+			{{ msg }}
+		</div>
+		{% endif %}
+
         <label for="username">Nama</label>
-        <input type="text" placeholder="Nama">
+        <input type="text" placeholder="Nama" name="nama" required>
 
         <label for="password">Email</label>
-        <input type="text" placeholder="Email">
+        <input type="text" placeholder="Email" name="email" required>
 
         <label for="password">Negara</label>
-        <input type="text" placeholder="Negara">
+        <input type="text" placeholder="Negara" name="negara" required>
 
         <label for="password">Tanggal Lahir</label>
-        <input type="text" placeholder="Tanggal Lahir">
+        <input type="date" placeholder="Tanggal Lahir" name="tanggal-lahir" required>
 
         <label for="password">Play</label>
 
         <div class="radio-opt">
             <label class="radio-inline">
-                <input type="radio" name="optradio" id="radio" checked>Left
+                <input type="radio" name="optradio" name="question1" 
+                id="radio">Left
             </label>
             <label class="radio-inline">
-                <input type="radio" name="optradio" id="radio">Right
+                <input type="radio" name="optradio" name="question1" id="radio">Right
             </label>
          </div>
 
         <label for="password">Tinggi Badan</label>
-        <input type="text" placeholder="Tinggi Badan">
+        <input type="text" placeholder="Tinggi Badan" name="tinggi-badan" required>
 
         <label for="password">Jenis Kelamin</label>
         <select id="jenis-kelamin" name="jenis-kelamin">
-            <option value="laki-laki">Laki-Laki</option>
-            <option value="perempuan">Perempuan</option>
+            <option name="question2" value="laki-laki">Laki-Laki</option>
+            <option name="question2" value="perempuan">Perempuan</option>
         </select>
 
-        <a href=""><button>Daftar</button></a>
+     <button type="submit">Daftar</button>
     </form>
 
 

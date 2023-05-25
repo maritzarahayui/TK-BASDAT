@@ -19,19 +19,26 @@
         <div class="shape"></div>
     </div> -->
 
-    <form id="mainwrapper">
+    <form id="mainwrapper" method="POST">
+        {% csrf_token %}
         <h3>Register Umpire</h3>
 
+        {% if msg != "" %}
+		<div class="alert alert-warning" role="alert">
+			{{ msg }}
+		</div>
+		{% endif %}
+
         <label >Nama</label>
-        <input type="text" placeholder="Nama">
+        <input type="text" placeholder="Nama" name="nama" required>
 
         <label >Email</label>
-        <input type="text" placeholder="Email">
+        <input type="text" placeholder="Email" name="email" required>
 
         <label >Negara</label>
-        <input type="text" placeholder="Negara">
+        <input type="text" placeholder="Negara" name="negara" required>
 
-        <a href=""><button>Daftar</button></a>
+        <button type="submit">Daftar</button>
     </form>
 
 

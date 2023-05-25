@@ -3,19 +3,22 @@
 {% load static %}
 
 {% block meta %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Dashboard</title>
 {% endblock meta %}
 
 <!-- Icon -->
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
     <a href="" class="navbar-brand p-0">
         <h1 class="text-title m-0"></i>Babadu</h1>
     </a>
@@ -29,26 +32,27 @@
             <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Lihat Event</a>
             <a href="{% url 'umpire:hasil_pertandingan' %}" class="nav-item nav-link">Hasil Pertandingan</a>
         </div>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
-  </nav>
+  </nav> -->
+
+{% include 'navbar_umpire.html' %}
 
 <h2>Dashboard</h2>
 
 <div class="d-flex justify-content-center">
     <div class="card" style="width: 20rem;">
-        <h4 class="card-header">Artair Ormston</h4>
+        <h4 class="card-header">{{nama}}</h4>
         <div class="card-body">
             <h5 class="card-title">Email:</h5>
-            <p class="card-text">aormston0@list-manage.com</p>
+            <p class="card-text">{{email}}</p>
             <h5 class="card-title">Negara:</h5>
-            <p class="card-text">Portugal</p>
+            <p class="card-text">{{negara}}</p>
         </div>
-        </div>
+    </div>
 </div>
 
 <style type="text/css">
-    
     body {
         background-color: var(--dark);
     }
@@ -74,7 +78,6 @@
     .card-text {
         font-size: 18px;
     }
-
 </style>
 
 {% endblock content %}

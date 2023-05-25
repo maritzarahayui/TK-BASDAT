@@ -14,44 +14,30 @@
 <!-- Sumber Pertanyaan
 https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tangkis-dan-kunci-jawabannya  -->
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-    <a href="" class="navbar-brand p-0">
-        <h1 class="text-title m-0">Babadu</h1>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="fa fa-bars"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto py-0 pe-4">
-            <a href="" class="nav-item nav-link">Dashboard</a>
-            <a href="" class="nav-item nav-link active">Tes Kualifikasi</a>
-            <a href="" class="nav-item nav-link">Daftar Event</a>
-            <a href="" class="nav-item nav-link">Enrolled Event</a>
-            <a href="" class="nav-item nav-link">Daftar Sponsor</a>
-        </div>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
-    </div>
-</nav>
+
+<!-- Navbar -->
+{% include 'navbar_atlet.html' %}
 
 <div class="container">
-    <form>
+    <form method="POST">
+        {% csrf_token %}
         <h2>Pertanyaan Kualifikasi</h2>
     
         <label class="questions">1. Latihan yang pertama dilakukan untuk menerapkan pola pukulan adalah...</label>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault1" value="salah">
             <label class="form-check-label" for="flexRadioDefault1">
                 Permainan net yang tipis-tipis
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault2">
+            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault2" value="benar">
             <label class="form-check-label" for="flexRadioDefault2">
                 Pukulan silang dan lob
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault3">
+            <input class="form-check-input" type="radio" name="1" id="flexRadioDefault3" value="salah">
             <label class="form-check-label" for="flexRadioDefault3">
                 Pukulan sederhana
             </label>
@@ -61,19 +47,19 @@ https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tang
         </label>
     
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="2" id="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="2" id="flexRadioDefault1" value="salah">
             <label class="form-check-label" for="flexRadioDefault1">
                 Drive
             </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="2" id="flexRadioDefault2">
+        <input class="form-check-input" type="radio" name="2" id="flexRadioDefault2" value="salah">
         <label class="form-check-label" for="flexRadioDefault2">
             Footwork
         </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="2" id="flexRadioDefault3">
+        <input class="form-check-input" type="radio" name="2" id="flexRadioDefault3" value="benar">
         <label class="form-check-label" for="flexRadioDefault3">
             Lob
         </label>
@@ -82,19 +68,19 @@ https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tang
         <label class="questions">3. Pukulan overhead yang meluncur dekat net dan jatuh di depan lapangan lawan disebut ...</label>
     
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="3" id="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="3" id="flexRadioDefault1" value="benar">
             <label class="form-check-label" for="flexRadioDefault1">
                 Netting
             </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="3" id="flexRadioDefault2">
+        <input class="form-check-input" type="radio" name="3" id="flexRadioDefault2" value="salah">
         <label class="form-check-label" for="flexRadioDefault2">
             Dropshot
         </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="3" id="flexRadioDefault3">
+        <input class="form-check-input" type="radio" name="3" id="flexRadioDefault3" value="salah">
         <label class="form-check-label" for="flexRadioDefault3">
             Backhand
         </label>
@@ -103,19 +89,19 @@ https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tang
         <label class="questions">4. Seorang pemain dinyatakan menang dalam satu set permainan badminton apa bila telah mencapai angka ..</label>
     
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="4" id="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="4" id="flexRadioDefault1" value="salah">
             <label class="form-check-label" for="flexRadioDefault1">
               11
             </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="4" id="flexRadioDefault2">
+        <input class="form-check-input" type="radio" name="4" id="flexRadioDefault2" value="salah">
         <label class="form-check-label" for="flexRadioDefault2">
             25
         </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="4" id="flexRadioDefault3">
+        <input class="form-check-input" type="radio" name="4" id="flexRadioDefault3" value="benar">
         <label class="form-check-label" for="flexRadioDefault3">
             21
         </label>
@@ -124,26 +110,26 @@ https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tang
         <label class="questions">5. Jumlah set dalam permainan bulu tangkis adalah ...</label>
     
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="5" id="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="5" id="flexRadioDefault1" value="salah">
             <label class="form-check-label" for="flexRadioDefault1">
                 1 dan 3 set
             </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="5" id="flexRadioDefault2">
+        <input class="form-check-input" type="radio" name="5" id="flexRadioDefault2" value="salah">
         <label class="form-check-label" for="flexRadioDefault2">
             3 dan 4 set
         </label>
         </div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="5" id="flexRadioDefault3">
+        <input class="form-check-input" type="radio" name="5" id="flexRadioDefault3" value="benar">
         <label class="form-check-label" for="flexRadioDefault3">
             2 dan 3 set
         </label>
         </div>
     
     
-        <a href=""><button>Submit</button></a>
+        <a href=""><button type="submit">Submit</button></a>
     </form>
 </div>
 
@@ -155,7 +141,7 @@ https://www.bola.com/ragam/read/5094762/15-contoh-soal-materi-olahraga-bulu-tang
     }
 
     form{
-        margin: 9%;
+        margin: 2%;
         margin-bottom: 1%;
         height: auto;
         background-color: rgba(255,255,255,0.13);

@@ -19,41 +19,43 @@
         <div class="shape"></div>
     </div> -->
 
-    <form id="mainwrapper">
+    <form id="mainwrapper" method="POST">
+        {% csrf_token %}
         <h3>Register Pelatih</h3>
 
+        {% if msg != "" %}
+		<div class="alert alert-warning" role="alert">
+			{{ msg }}
+		</div>
+		{% endif %}
+
         <label >Nama</label>
-        <input type="text" placeholder="Nama" id="nama">
+        <input type="text" placeholder="Nama" id="nama" name="nama" required>
 
         <label >Email</label>
-        <input type="text" placeholder="Email" id="email">
+        <input type="text" placeholder="Email" id="email" name="email" required>
 
         <label >Negara</label>
-        <input type="text" placeholder="Negara" id="email">
+        <input type="text" placeholder="Negara" id="email" name="email" required>
 
         <label >Kategori</label>
         <br>
         <div class="checkbox">
-            <input type="checkbox" id="vehicle2" name="vehicle1" value="Bike">
+            <input type="checkbox" id="tunggal_putra" name="tunggal_putra" value="">
             <label for="vehicle1">Tunggal Putra</label><br>
-            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <input type="checkbox" id="tunggal_putri" name="tunggal_putri" value="">
             <label for="vehicle2">Tunggal Putri</label><br>
-            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <input type="checkbox" id="ganda_putra" name="ganda_putra" value="">
             <label for="vehicle2">Ganda Putra</label><br>
-            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <input type="checkbox" id="ganda_putri" name="ganda_putri" value="">
             <label for="vehicle2">Ganda Putri</label><br>
-            <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+            <input type="checkbox" id="ganda_campuran" name="ganda_campuran" value="">
             <label for="vehicle2">Ganda Campuran</label><br>
         </div>
 
         <label >Tanggal Mulai</label>
-        <input type="date" id="birthday" name="birthday">
-
-        
-
-        <a href=""><button>Daftar</button></a>
+        <input type="date" id="tgl_mulai" name="tgl_mulai" required>
+     <button type="submit">Daftar</button>
     </form>
-
-
 
 {% endblock content %}

@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
   <a href="" class="navbar-brand p-0">
     <h1 class="text-title m-0"></i>Babadu</h1>
   </a>
@@ -34,9 +34,9 @@
     </div>
     <a href="" class="btn btn-logout py-2 px-4">Logout</a>
   </div>
-</nav>
+</nav> -->
 
-<!-- Dropdown menu -->
+<!-- Dropdown menu
 <div class="c">
   <div class="dd">
     <div class="dd-a">
@@ -52,114 +52,153 @@
       </ul>
     </div>
   </div>
-</div>
+</div> -->
 
-<!-- Card detail pertandingan -->
-<div class="wrapper">
-  <div class="card">
-    <!-- <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/11501/production/_129031907_podiumgandaputra3_final_ae2023_pbsi_20230319.jpg" alt="" width="500" height="200" /> -->
-    <div id="container">
-      <h4 id="name">HASIL PERTANDINGAN ALL ENGLAND 2023</h4>
+<body>
+  {% include 'navbar_umpire.html' %}
+  <!-- Card detail pertandingan -->
+  <div class="back">
+    <div class="wrapper">
+      <div class="card">
+        <div id="container">
+          {% for event in info_pertandingan %}
+          <h4 id="name">Hasil Pertandingan {{ event.jenis_partai }} - {{ event.nama_event }}</h4>
+          {% endfor %}
 
-      <table class="table" style="color: #292826;">
-        <!-- <thead class="thead-light" style="background-color: white; color: #000;">
+          <table class="table" style="color: #292826;">
+            <tbody>
+              {% for event in info_pertandingan %}
               <tr>
-                <th scope="col">Tim 1</th>
-                <th scope="col">Tim 2</th>
+                <td id="judul">Nama Event</td>
+                <td id="isi">{{ event.nama_event }}</td>
               </tr>
-            </thead> -->
+
+              <tr>
+                <td id="judul">Stadium</td>
+                <td id="isi">{{event.nama_stadium}}</td>
+              </tr>
+
+              <tr>
+                <td id="judul">Hadiah</td>
+                <td id="isi">{{event.total_hadiah}}</td>
+              </tr>
+
+              <tr>
+                <td id="judul">Kategori Superseries</td>
+                <td id="isi">{{event.kategori_superseries}}</td>
+              </tr>
+
+              <tr>
+                <td id="judul">Tanggal Mulai</td>
+                <td id="isi">{{event.tanggal_mulai}}</td>
+              </tr>
+
+              <tr>
+                <td id="judul">Tanggal Selesai</td>
+                <td id="isi">{{event.tanggal_selesai}}</td>
+              </tr>
+
+              <tr>
+                <td id="judul">Kapasitas</td>
+                <td id="isi">{{event.kapasitas}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <div class="container" style="margin-top: 20px; margin-bottom: 40px;">
+      <table class="table" id="table-hasil" style="text-align: center; color: #F1F8FF;">
+        <thead class="thead-light" style="background-color: #F9D342; color: #292826;">
+          <tr>
+            <th scope="col">Tahap</th>
+            <th scope="col">Nama Tim</th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
-            <td id="judul">Nama Event</td>
-            <td id="isi">ALL ENGLAND 2023</td>
+            <td>Juara 1</td>
+            {% for juara in juara_satu_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_satu_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
-            <td id="judul">Stadium</td>
-            <td id="isi">Utilita Arena Birmingham</td>
+            <td>Juara 2</td>
+            {% for juara in juara_dua_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_dua_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
-            <td id="judul">Hadiah</td>
-            <td id="isi">$1.250.000</td>
+            <td>Juara 3</td>
+            {% for juara in juara_tiga_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in juara_tiga_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
-            <td id="judul">Kategori Superseries</td>
-            <td id="isi">S1000</td>
+            <td>Semifinal</td>
+            {% for juara in semifinal_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in semifinal_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
 
           <tr>
-            <td id="judul">Tanggal Mulai</td>
-            <td id="isi">14 Maret 2023</td>
-          </tr>
-
-          <tr>
-            <td id="judul">Tanggal Selesai</td>
-            <td id="isi">19 Maret 2023</td>
-          </tr>
-
-          <tr>
-            <td id="judul">Kapasitas</td>
-            <td id="isi">15.000 pengunjung</td>
+            <td rowspan="4">Perempat Final</td>
+            {% for juara in perempat_final_ganda %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
+            {% for juara in perempat_final_tunggal %}
+            <td>{{juara.atlet}}</td>
+            {% endfor %}
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-</div>
-
-<div class="container" style="margin-top: 20px; margin-bottom: 40px;">
-  <table class="table" id="table-hasil" style="text-align: center; color: #F1F8FF;">
-    <thead class="thead-light" style="background-color: #F9D342; color: #292826;">
-      <tr>
-        <th scope="col">Tahap</th>
-        <th scope="col">Nama Tim</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Juara 1</td>
-        <td>A</td>
-      </tr>
-
-      <tr>
-        <td>Juara 2</td>
-        <td>G</td>
-      </tr>
-
-      <tr>
-        <td>Juara 3</td>
-        <td>D</td>
-      </tr>
-
-      <tr>
-        <td>Semifinal</td>
-        <td>E</td>
-      </tr>
-
-      <tr>
-        <!-- This cell will take up
-            space on two rows -->
-        <td rowspan="4">Perempat Final</td>
-        <td>C</td>
-      </tr>
-      <tr>
-        <td>F</td>
-      </tr>
-      <tr>
-        <td>B</td>
-      </tr>
-      <tr>
-        <td>H</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  </div>
+</body>
 
 <style type="text/css">
   /* Dropdown menu */
-  .c {
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* tbody {
+    padding: auto;
+  } */
+
+  .back {
+    /* max-width: 1200px; */
+    /* margin: 0 auto; */
+    /* height: 100%; */
+    padding: 100px;
+    text-align: center;
+    background-color: #292826;
+  }
+
+  /* .c {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -180,9 +219,9 @@
     position: relative;
     transition-duration: 0.2s;
     -webkit-transition-duration: 0.2s;
-  }
+  } */
 
-  .dd input:after {
+  /* .dd input:after {
     content: "";
     width: 100%;
     height: 2px;
@@ -213,9 +252,9 @@
 
   .dd input:hover {
     cursor: pointer;
-  }
+  } */
 
-  .dd input:hover~.dd-a {
+  /* .dd input:hover~.dd-a {
     -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.75);
@@ -246,17 +285,17 @@
     -webkit-transform: scaleY(0);
     -webkit-transform-origin: top left;
     -webkit-transition-duration: 0.2s;
-  }
+  } */
 
-  .dd-c ul {
+  /* .dd-c ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
   }
 
-  .dd-c li {
-    /* margin-botom: 5px; */
-    word-break: keep-all;
+  .dd-c li { */
+  /* margin-botom: 5px; */
+  /* word-break: keep-all;
     white-space: nowrap;
     display: block;
     position: relative;
@@ -303,7 +342,7 @@
 
   .txt:hover span {
     color: #F1F8FF;
-  }
+  } */
 
   /* Card */
   .card {
@@ -353,14 +392,14 @@
     padding: 8px;
   }
 
-  .table {
+  /* .table {
     margin-left: 40px;
     margin-right: 40px;
-  }
+  } */
 
-  img {
+  /* img {
     border-radius: 12px;
-  }
+  } */
 
   #table-hasil {
     margin-top: 200px;

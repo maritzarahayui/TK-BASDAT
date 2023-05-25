@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from collections import namedtuple
 from django.db import *
 import psycopg2
+from uuid import uuid1
+from utils.query import *
 
 def connectDb():
     return psycopg2.connect(
@@ -33,54 +36,276 @@ def get_query(str):
         return result
 
 def register_atlet(request):
+    if request.method == "post".upper():
+        id = uuid1()
+        nama = request.POST.get("nama")
+        email = request.POST.get("email")
+        negara = request.POST.get("negara")
+        tgl_lahir = request.POST.get("tanggal-lahir")
+        if request.POST.get('question1') == "on":
+            play = False
+        else:
+            play = True
+        tinggi = request.POST.get("tinggi-badan")
+        if request.POST.get('question2') == "on":
+            kelamin = True
+        else:
+            kelamin = False
+        
+        error, check_mail = try_exec(f"SELECT * FROM member WHERE email = '{email}'")
+        if check_mail:
+            msg = "Email sudah terdaftar"
+            return render(request, "register_atlet.html", {"msg": msg})
+        else:
+            error, res = try_exec(f"INSERT INTO member VALUES ('{id}', '{nama}', '{email}')")
+            if error: 
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            error, res = try_exec(f"INSERT INTO atlet VALUES ('{id}', '{tgl_lahir}', '{negara}', {play}, '{tinggi}', null,{kelamin})")
+            print(f"INSERT INTO atlet VALUES ('{id}', '{tgl_lahir}', '{negara}', {play}, '{tinggi}', null,{kelamin})")
+            if error:
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            error, res = try_exec(f"INSERT INTO atlet_non_kualifikasi VALUES ('{id}')")
+            if error: 
+                print(res)
+                return render(request, "register_atlet.html", {"msg": "Gagal mendaftar"})
+
+            return render(request, "register_atlet.html", {"msg": "Berhasil mendaftar"})
+
+
     return render(request, "register_atlet.html")
 
-
 def dashboard_atlet(request):
-    return render(request, "dashboard_atlet.html")
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
+
+    query = get_query(
+        f'''SELECT m.nama, negara_asal, email, tgl_lahir, play_right, height, jenis_kelamin, world_rank FROM ATLET A, MEMBER M WHERE A.id = '{id}' AND M.id = A.id GROUP BY m.nama, negara_asal, email, tgl_lahir, play_right, height, jenis_kelamin, world_rank;
+        '''
+    )
+    
+    query.append(get_query(
+        f'''SELECT SUM(total_point) FROM POINT_HISTORY WHERE id_atlet = '{id}'
+        '''
+    ))
+    
+    query.append(get_query(
+        f'''SELECT nama FROM MEMBER M, ATLET_PELATIH AP
+        WHERE AP.id_atlet = '{id}' AND AP.id_pelatih = M.id
+        '''
+    ))
+    
+    if (query[0][4]):
+        play = "Right Hand"
+    else:
+        play = "Left Hand"
+    
+    if (query[0][6]):
+        jenis_kelamin = "Laki-laki"
+    else:
+        jenis_kelamin = "Perempuan"
+        
+    if (query[0][7] == None):
+        world_rank = "-"
+        status = "Not Qualified"
+    else:
+        world_rank = query[0][7]
+        status = "Qualified"
+        
+    if (query[2] ==  []):
+        pelatih = "-"
+    else:
+        pelatih = query[2][0][0]
+        
+    if (query[1][0][0] == None):
+        poin = 0
+    else:
+        poin = query[1][0][0]
+    
+    context = {
+        "nama": nama,
+        "email": email,
+        "negara": query[0][1],
+        "tgl_lahir": query[0][3],
+        "jenis_kelamin": jenis_kelamin,
+        "play" : play,
+        "status" : status,
+        "height": query[0][5],
+        "world_rank": world_rank,
+        "pelatih" : pelatih,
+        "poin" : poin
+    }
+    return render(request, "dashboard_atlet.html", context)
 
 
 def tes_kualifikasi(request):
-    return render(request, "tes_kualifikasi.html")
+
+    # DB Connection
+    cur = connection.cursor()
+   
+    # Sessions
+    nama = request.session['nama']
+    email = request.session['email']
+    role = request.session['role']
+    
+    batch = request.session['batch']
+    tempat_pelaksanaan = request.session['tempat_pelaksanaan']
+    tanggal_pelaksanaan = request.session['tanggal_pelaksanaan']
+    tahun = request.session['tahun']
+    status =  request.session['status']
+
+    cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
+    id_atlet = cur.fetchone()[0] 
+
+    print(id_atlet)
+    print(status)
+    print(tahun)
+    print(batch)
+    print(tempat_pelaksanaan)
+    print(tanggal_pelaksanaan)
+
+    if request.method == 'POST':
+      
+        option_1 = request.POST.get('1', '')
+        option_2 = request.POST.get('2', '')
+        option_3 = request.POST.get('3', '')
+        option_4 = request.POST.get('4', '')
+        option_5 = request.POST.get('5', '')
+
+        score = 0
+        if option_1 == 'benar':
+            score += 1
+        if option_2 == 'benar':
+            score += 1
+        if option_3 == 'benar':
+            score += 1
+        if option_4 == 'benar':
+            score += 1
+        if option_5 == 'benar':
+            score += 1
 
 
-def form_kualifikasi(request):
+        cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
+        id_atlet = cur.fetchone()[0] 
+
+
+        if score >= 4 and status == 'Not Qualified':
+            print("yeyyy lulus:)")
+            
+            cur.execute("""
+                UPDATE atlet_nonkualifikasi_ujian_kualifikasi
+                SET hasil_lulus = TRUE 
+                WHERE id_atlet = %s
+                    AND tahun = %s
+                    AND batch = %s
+                    AND tempat = %s
+                    AND tanggal = CAST(%s AS DATE)
+                """,
+                [id_atlet, int(tahun), int(batch), tempat_pelaksanaan, tanggal_pelaksanaan]
+            )
+
+        else:
+            print("nooo ga lulus:(")
+        print(score)
+        return redirect("/atlet/riwayat_ujian_kualifikasi")
+    return render(request, "tes_Kualifikasi.html")
+
+
+def list_ujian_kualifikasi_atlet(request):
 
     # DB Connection
     cur = connection.cursor()
 
     # SQL Query
-   
-    # cur.execute(""" SELECT * FROM ujian_kualifikasi; """)   
-    # dataUjian = cur.fetchall() 
+    cur.execute(""" SELECT * FROM ujian_kualifikasi; """)   
+    dataUjian = cur.fetchall() 
 
-    # sql_batch, sql_tahun, sql_tempat, sql_tanggal = ([] for i in range(4))
-    # for data in dataUjian:
-    #         sql_batch.append(data[0])
-    #         sql_tahun.append(data[1])
-    #         sql_tempat.append(data[2])
-    #         sql_tanggal.append(str(data[3]))
-    #         print(sql_tanggal)
+    batch, tahun, tempat, tanggal = ([] for i in range(4))
+    for data in dataUjian:
+            batch.append(data[0])
+            tahun.append(data[1])
+            tempat.append(data[2])
+            tanggal.append(str(data[3]))
 
-    cur.execute(""" SELECT tanggal FROM ujian_kualifikasi; """)   
-    tanggal = cur.fetchall() 
-    cur.execute(""" SELECT tempat FROM ujian_kualifikasi; """)   
-    tempat = cur.fetchall() 
+    context =  {}
+    context['ujian'] = zip(batch,
+                        tahun,
+                        tempat,
+                        tanggal)
 
-    sql_tanggal = []
-    for data in tanggal:
-            sql_tanggal.append(str(data[0]))
-    sql_tempat = []
-    for data in tempat:
-            sql_tempat.append(data[0])
+    if request.method == 'POST':
 
-  
-    context =  {
-        "tempat" : sql_tempat,
-        "tanggal" :  sql_tanggal,
-    }
+        try:
+            # Mengambil data dari POST
+            batch = request.POST.get('batch')
+            tahun = request.POST.get('tahun')
+            tempat_pelaksanaan = request.POST.get('tempat')
+            tanggal_pelaksanaan = request.POST.get('tanggal')
 
-    return render(request, "form_kualifikasi.html",  context)
+            # Mengambil data dari Session
+            nama = request.session['nama']
+            email = request.session['email']
+            cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
+            id_atlet = cur.fetchone()[0] 
+            print(id_atlet)
+
+            # Set data ke Session
+            request.session['batch'] = batch
+            request.session['tahun'] = tahun
+            request.session['tempat_pelaksanaan'] = tempat_pelaksanaan
+            request.session['tanggal_pelaksanaan'] = tanggal_pelaksanaan
+
+            # Cek 
+            print(tahun)
+            print(batch)
+            print(tempat_pelaksanaan)
+            print(tanggal_pelaksanaan)
+
+            # Mengecek apakah dia atlet qualified atau not qualified
+            cur.execute("""
+                SELECT
+                    CASE
+                        WHEN EXISTS (
+                            SELECT 1
+                            FROM atlet_kualifikasi
+                            WHERE id_atlet = %s
+                        )
+                        THEN 'Qualified'
+                        ELSE 'Not Qualified'
+                    END AS qualification_status
+                FROM atlet
+                WHERE id = %s;
+            """, [id_atlet, id_atlet])
+            status = cur.fetchone()[0]
+
+            request.session['status'] = status
+
+            if status == 'Not Qualified':
+                # SQL Query
+                cur.execute("""
+                    INSERT INTO atlet_nonkualifikasi_ujian_kualifikasi
+                    VALUES (%s, %s, %s, %s, CAST(%s AS DATE), FALSE)
+                """, [id_atlet, tahun, batch, tempat_pelaksanaan, tanggal_pelaksanaan])
+                
+                connection.commit()
+
+            return redirect("/atlet/tes-kualifikasi")
+        
+        except Error as e:
+       
+            print("uda pernah ngambil")
+            error_message = "Anda sudah pernah mengambil ujian kualifikasi yang dipilih."
+            context["error_message"] =  error_message            
+            return render(request, "list_ujian_kualifikasi_atlet.html", context)
+
+    return render(request, "list_ujian_kualifikasi_atlet.html",  context)
 
 
 def daftar_event(request):
@@ -323,8 +548,12 @@ def pilih_kategori(request, event_id):
         return render(request, "pilih_kategori.html", context)
 
 def enrolled_partai_kompetisi(request):
-    # id = str(request.session["id"]).strip()
-    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
     
     query = get_query(
         f'''SELECT par.nama_event, par.tahun_event, nama_stadium, par.jenis_partai, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai
@@ -351,9 +580,12 @@ def enrolled_partai_kompetisi(request):
     return render(request, "enrolled_partai_kompetisi.html", {"query": query})
 
 def enrolled_event(request):
-    # id = str(request.session["id"]).strip()
-    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
-    # id = 'c2b8357e-7865-4939-8be0-97b283320eaf'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
     
     query = get_query(
         f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
@@ -396,8 +628,10 @@ def enrolled_event(request):
         WHERE nomor_peserta = '{nomor_peserta}' AND nama_event = '{nama_event}' AND tahun_event = '{tahun_event}'
             '''
         )
-        
-    print(delete)
+        messages.error(request, 'cannot unenroll passed event')
+    
+    else:
+        messages.success(request, "event unenrolled")
     
     query = get_query(
         f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
@@ -420,12 +654,16 @@ def enrolled_event(request):
         WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_ganda = '{id_ganda[0].id_atlet_ganda}';
             '''
         )    
-    
+
     return render(request, "enrolled_event.html", {"query" : query})
 
 def daftar_sponsor(request):
-    # id = str(request.session["id"]).strip()
-    id = 'aa8a676a-07a3-4eb6-bcec-54a74ee35c93'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
 
     query = get_query(
         f'''SELECT nama_brand
@@ -463,11 +701,15 @@ def daftar_sponsor(request):
         '''
     )
 
-    return render(request, "daftar_sponsor.html", {"query":query})
+    return redirect("atlet:list_sponsor")
 
 def list_sponsor(request):
-    # id = str(request.session["id"]).strip()
-    id = 'aa8a676a-07a3-4eb6-bcec-54a74ee35c93'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
 
     query = get_query(
         f'''SELECT nama_brand, tgl_mulai, tgl_selesai
@@ -478,35 +720,43 @@ def list_sponsor(request):
     
     return render(request, "list_sponsor.html", {"query" : query})
 
-def datetime_to_string(data):
-    listTanggal = str(data[0]).split("-")
-    result = ""
-    result += listTanggal[1]
-    result += " "
-    if listTanggal[2] == "01" :
-        result += "Januari"
-    elif listTanggal[2] == "02" :
-        result += "Februari"
-    elif listTanggal[2] == "03" :
-        result += "Maret"
-    elif listTanggal[2] == "04" :
-        result += "April"
-    elif listTanggal[2] == "05" :
-        result += "Mei"
-    elif listTanggal[2] == "06" :
-        result += "Juni"
-    elif listTanggal[2] == "07" :
-        result += "Juli"
-    elif listTanggal[2] == "08" :
-        result += "Agustus"
-    elif listTanggal[2] == "09" :
-        result += "September"
-    elif listTanggal[2] == "10" :
-        result += "Oktober"
-    elif listTanggal[2] == "11" :
-        result += "November"
-    elif listTanggal[2] == "12" :
-        result += "Desember"
-    result += " "
-    result += listTanggal[0]  
-    return result
+def riwayat_ujian_kualifikasi_atlet(request):
+
+    # DB Connection
+    cur = connection.cursor()
+
+    # Mengambil data dari Session
+    nama = request.session['nama']
+    email = request.session['email']
+    cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
+    id_atlet = cur.fetchone()[0] 
+    print(id_atlet)
+
+    # SQL Query
+    cur.execute(
+        """ 
+            SELECT DISTINCT U.tahun, U.batch, U.tempat, U.tanggal, N.hasil_lulus
+            FROM member M, atlet A, ujian_kualifikasi U, ATLET_NONKUALIFIKASI_UJIAN_KUALIFIKASI N
+            WHERE M.id = %s AND N.id_atlet = M.id AND N.tempat = U.tempat
+            AND N.batch = U.batch AND N.tempat = U.tempat AND N.tanggal = U.tanggal; 
+        """,
+        [id_atlet]
+    )   
+    dataUjian = cur.fetchall() 
+
+    tahun, batch, tempat, tanggal, hasil = ([] for i in range(5))
+    for data in dataUjian:
+            tahun.append(data[0])
+            batch.append(data[1])
+            tempat.append(data[2])
+            tanggal.append(str(data[3]))
+            hasil.append(data[4])
+
+    context =  {}
+    context['ujian'] = zip(tahun,
+                        batch,
+                        tempat,
+                        tanggal,
+                        hasil)
+    
+    return render(request, "riwayat_ujian_kualifikasi_atlet.html",  context)

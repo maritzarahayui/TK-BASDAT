@@ -3,13 +3,14 @@
 {% load static %}
 
 {% block meta %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Dashboard</title>
 {% endblock meta %}
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+<!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
     <a href="" class="navbar-brand p-0">
         <h1 class="text-title m-0">Babadu</h1>
     </a>
@@ -22,35 +23,35 @@
             <a href="{% url 'pelatih:daftar_atlet' %}" class="nav-item nav-link">Daftar Atlet</a>
             <a href="{% url 'pelatih:list_atlet' %}" class="nav-item nav-link ">List Atlet</a>
         </div>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
-  </nav>
-  
+  </nav> -->
+
+{% include 'navbar_pelatih.html' %}
 
 <h2>Dashboard</h2>
 
 <td class="align-middle">
     <div class="d-flex justify-content-center">
         <div class="card" style="width: 20rem;">
-            <h4 class="card-header">Edwin Challenger</h4>
+            <h4 class="card-header">{{nama}}</h4>
             <div class="card-body">
-              <h5 class="card-title">Email:</h5>
-              <p class="card-text">echallenger5@ucla.edu</p>
-              <h5 class="card-title">Spesialisasi Kategori:</h5>
-              <p class="card-text">Tunggal Putra</p>
-              <h5 class="card-title">Tanggal Mulai:</h5>
-              <p class="card-text">05/07/2021</p>
+                <h5 class="card-title">Email:</h5>
+                <p class="card-text">{{email}}</p>
+                <h5 class="card-title">Spesialisasi Kategori:</h5>
+                <p class="card-text">{{kategori_spesialisasi}}</p>
+                <h5 class="card-title">Tanggal Mulai:</h5>
+                <p class="card-text">{{tanggal_mulai}}</p>
             </div>
-          </div>
+        </div>
     </div>
 </td>
 
 <style type="text/css">
-
     body {
         background-color: var(--dark);
     }
-    
+
     h2 {
         text-align: center;
         width: 100%;
@@ -72,7 +73,6 @@
     .card-text {
         font-size: 18px;
     }
-
 </style>
 
 {% endblock content %}
