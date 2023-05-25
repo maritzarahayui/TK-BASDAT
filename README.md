@@ -10,3 +10,4 @@
 - 2106750774 - Rahma Adinda Putri
 
 ## Tautan Aplikasi
+https://tk-basdat-production-b5f4.up.railway.app/
