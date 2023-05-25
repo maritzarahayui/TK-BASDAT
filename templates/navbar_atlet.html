@@ -30,7 +30,7 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ms-auto py-0 pe-4">
             <li class="nav-item">
-                <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-link active">Dashboard</a>
+                <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-link">Dashboard</a>
             </li>
             <li class="nav-item dropdown">
                 <a href="#" id="ujian" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Ujian Kualifikasi</a>
@@ -53,9 +53,8 @@
                     <li><a href="{% url 'atlet:list_sponsor' %}" class="dropdown-item">List Sponsor</a></li>
                 </ul>
             </li>
-            <a href="{% url 'atlet:daftar_sponsor' %}" class="nav-item nav-link">Daftar Sponsor</a>
         </div>
-        <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
 </nav>
 
