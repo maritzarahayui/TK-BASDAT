@@ -17,7 +17,7 @@ try:
     connection.autocommit = True
     cursor = connection.cursor()
 
-        # Print PostgreSQL details
+    # Print PostgreSQL details
     print("PostgreSQL server information")
     print(connection.get_dsn_parameters(), "\n")
 

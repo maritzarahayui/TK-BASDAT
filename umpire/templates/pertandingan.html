@@ -9,85 +9,35 @@
     <link rel="stylesheet" href="{% static 'css/pertandingan.css'%}">
 {% endblock meta %}
 
-<!-- Icon -->
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-    <a href="" class="navbar-brand p-0">
-        <h1 class="text-title m-0">Babadu</h1>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="fa fa-bars"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto py-0 pe-4">
-            <a href="" class="nav-item nav-link">Dashboard</a>
-            <a href="" class="nav-item nav-link">Daftar Atlet</a>
-            <a href="" class="nav-item nav-link">Lihat Event</a>
-            <a href="" class="nav-item nav-link">Hasil Pertandingan</a>
-        </div>
-        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
-    </div>
-</nav>
+{% include 'navbar_umpire.html' %}
+{% csrf_token %}
 
 <header>
-    <h2>PERTANDINGAN PEREMPAT FINAL</h2>
+    <h2>PERTANDINGAN {{ jenis_pertandingan }}</h2>
 </header>
 
-<!-- Timer -->
-<div class="container">
-  <input id="start" name="controls" type="radio"/>
-  <input id="stop" name="controls" type="radio"/>
-  <input id="reset" name="controls" type="radio"/>
-  <div class="timer">
-    <div class="cell">
-      <div class="numbers tenhour moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <div class="cell">
-      <div class="numbers hour moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <div class="cell divider">
-      <div class="numbers">:</div>
-    </div>
-    <div class="cell">
-      <div class="numbers tenminute movesix">0 1 2 3 4 5 6</div>
-    </div>
-    <div class="cell">
-      <div class="numbers minute moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <div class="cell divider">
-      <div class="numbers">:</div>
-    </div>
-    <div class="cell">
-      <div class="numbers tensecond movesix">0 1 2 3 4 5 6</div>
-    </div>
-    <div class="cell">
-      <div class="numbers second moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <!-- <div class="cell divider">
-      <div class="numbers">.</div>
-    </div>
-    <div class="cell">
-      <div class="numbers millisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <div class="cell">
-      <div class="numbers tenmillisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div>
-    <div class="cell">
-      <div class="numbers hundredmillisecond moveten">0 1 2 3 4 5 6 7 8 9</div>
-    </div> -->
-  </div>
-  <div class="timer-controls">
-    <label for="start"> <i class="fa fa-play"></i></label>
-    <label for="stop"><i class="fa fa-pause"></i></label>
-    <label for="reset"><i class="fa fa-refresh"></i></label>
+<header>
+    <h2>LIVE SCORE PERTANDINGAN {{event}}</h2>
+</header>
+
+<header>
+    <h2>PARTAI {{partai}}</h2>
+</header>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center mb-5">
+      <div id="stopwatch">00:00:00.000</div>
+      <button id="startBtn" class="btn btn-primary">Start</button>
+      <button id="stopBtn" class="btn btn-danger">Stop</button>
   </div>
 </div>
-
+<br>
+<br>
 <!-- Table -->
 <div class="container" style="margin-top: 20px;">
 	<table class="table" style="text-align: center; color: #F1F8FF;">
@@ -100,137 +50,29 @@
       </tr>
     </thead>
     <tbody>
+      {% for pertandingan in lst_pertandingan %}
       <tr>
-        <td>A</td>
-        <td>B</td>
+        <td>{{ pertandingan.tim1.nama }}</td>
+        <td>{{ pertandingan.tim2.nama }}</td>
         <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">1</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
+          <button id="btn-dec-score-tim1-{{forloop.counter0}}" onclick="gantiSkor('{{forloop.counter0}}', 'tim1', 'decrement')" class="btn btn-outline-primary minus-btn" data-team="1" data-row="1">-</button>
+          <span id="score-tim1-{{forloop.counter0}}" class="score-text-tim1" data-score="0">0</span>
+          <button id="btn-inc-score-tim1-{{forloop.counter0}}" onclick="gantiSkor('{{forloop.counter0}}', 'tim1', 'increment')" class="btn btn-outline-primary plus-btn" data-team="1" data-row="1">+</button>
         </td>
         <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">0</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
+          <button id="btn-dec-score-tim2-{{forloop.counter0}}" onclick="gantiSkor('{{forloop.counter0}}', 'tim2', 'decrement')" class="btn btn-outline-primary minus-btn" data-team="2" data-row="1">-</button>
+          <span id="score-tim2-{{forloop.counter0}}" class="score-text-tim2" data-score="0">0</span>
+          <button id="btn-inc-score-tim2-{{forloop.counter0}}" onclick="gantiSkor('{{forloop.counter0}}', 'tim2', 'increment')" class="btn btn-outline-primary plus-btn" data-team="2" data-row="1">+</button>
+      </td>
       </tr>
-      <tr>
-        <td>C</td>
-        <td>D</td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">1</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">2</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-      </tr>
-      <tr>
-        <td>E</td>
-        <td>F</td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">2</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">1</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-      </tr>
-      <tr>
-        <td>G</td>
-        <td>H</td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">2</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-        <td>
-          <button type="button" id="btn" class="minus"><ion-icon name="remove-sharp" style="color: #292826;"></ion-icon></button>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label class="num">1</label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <label></label>
-          <button type="button" id="btn" class="plus"><ion-icon name="add-sharp" style="color: #292826;"></ion-icon></button>
-        </td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
 
 <!-- Button next -->
 <div class="btn-next" style="text-align: center;">
-  <button type="button" id="btn" class="plus" style="color: #292826; text-align: center;">
-    <label>Lihat pertandingan selanjutnya</label>
-    <label></label>
-    <ion-icon name="arrow-forward-sharp" style="text-align: center;"></ion-icon>
-  </button>
+<button id="btnNext" class="btn btn-primary">NEXT</button>
 </div>
 
 <style type="text/css">
@@ -448,33 +290,127 @@
     border: 0;
     border-radius: 8px;
   }
-
-
-
-
 </style>
 
-<!-- Button increment decrement score -->
+{{ lst_pertandingan|json_script:"data_pertandingan" }}
 <script>
-  const plus = document.querySelector(".plus"),
-  minus = document.querySelector(".minus"),
-  num = document.querySelector(".num");
-  let a = 1;
-  plus.addEventListener("click", ()=>{
-    a++;
-    a = (a < 10) ? a : a;
-    num.innerText = a;
-  });
-  minus.addEventListener("click", ()=>{
-    if(a >= 1){
-      a--;
-      a = (a < 10) ? a : a;
-      num.innerText = a;
+    const dataPertandingan = JSON.parse(document.getElementById('data_pertandingan').textContent)
+
+
+    function gantiSkor(idx, keyTim, operationType) {
+        const idxNum = parseInt(idx)
+        const pertandingan = dataPertandingan[idxNum]
+        const timPertandingan = pertandingan[keyTim]
+        const currentScoreEl = document.getElementById(`score-${keyTim}-${idxNum}`)
+        const currentScore = parseInt(currentScoreEl.textContent.trim())
+        let newScore = currentScore
+        if (operationType === 'decrement') {
+            if (currentScore > 0) {
+                newScore--
+                currentScoreEl.textContent = (currentScore - 1).toString()
+            }
+        } else {
+            newScore++
+            currentScoreEl.textContent = (currentScore + 1).toString()
+        }
+        timPertandingan.score = newScore
     }
-  });
 
+    $(document).ready(function() {
+        var startTime, elapsedTimeMinute = 0;
+        var timerInterval;
 
+        function startStopwatch() {
+            startTime = new Date()
+            timerInterval = setInterval(updateStopwatch, 10);
+        }
+
+        function updateStopwatch() {
+            var currentTime = Date.now();
+            elapsedTime = currentTime - startTime.getTime();
+            var formattedTime = formatTime(elapsedTime);
+            $("#stopwatch").text(formattedTime);
+        }
+
+        function stopStopwatch() {
+            const now = Date.now()
+            elapsedTimeMinute = (now - startTime.getTime()) / 60_000
+            clearInterval(timerInterval);
+        }
+
+        function formatTime(time) {
+            var hours = Math.floor(time / 3600000);
+            var minutes = Math.floor((time % 3600000) / 60000);
+            var seconds = Math.floor((time % 60000) / 1000);
+            var milliseconds = time % 1000;
+
+            hours = padZero(hours, 2);
+            minutes = padZero(minutes, 2);
+            seconds = padZero(seconds, 2);
+            milliseconds = padZero(milliseconds, 3);
+
+            return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+        }
+
+        function padZero(value, length) {
+            return value.toString().padStart(length, "0");
+        }
+
+        $("#startBtn").click(function() {
+            startStopwatch();
+        });
+
+        $("#stopBtn").click(function() {
+            stopStopwatch();
+        });
+
+        $("#btnNext").click(function () {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const padStart2 = (data) => data.toString().padStart(2, "0") 
+            const startDate = startTime.getFullYear() + "-" + padStart2(startTime.getMonth() + 1) + "-" + padStart2(startTime.getDate())
+            const startTimeOnly = padStart2(startTime.getHours()) + ":" + padStart2(startTime.getMinutes()) + ":" + padStart2(startTime.getSeconds())
+
+            for (let i = 0; i < dataPertandingan.length; i++) {
+                const pertandingan = dataPertandingan[i]
+                if ((pertandingan.tim1?.score || 0) > (pertandingan.tim2?.score || 0)) {
+                    pertandingan.tim1.is_win = true
+                    pertandingan.tim2.is_win = false
+                } else {
+                    pertandingan.tim2.is_win = true
+                    pertandingan.tim1.is_win = false
+                }
+            }
+
+            const dataPost = {
+                    'tanggal_mulai': startDate,
+                    'waktu_mulai': startTimeOnly,
+                    'babak': '{{ babak }}',
+                    'event': '{{ event }}',
+                    'tahun': '{{ tahun }}',
+                    'partai': '{{ partai }}',
+                    'durasi': elapsedTimeMinute,
+                    'data_pertandingan': dataPertandingan,
+                };
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'umpire:simpan_pertandingan' %}",
+                contentType: 'application/json; charset=utf-8',
+                headers: {'X-CSRFToken': csrftoken},
+                data: JSON.stringify(dataPost),
+                success: function(response) {
+                    console.log(response);
+                    const nextBabak = response.next_babak;
+                    location.href =
+                        `/umpire/pertandingan/${dataPost.event}/${dataPost.partai}/${dataPost.tahun}?jenisBabak=${nextBabak}`
+
+                },
+                error: function(xhr, textStatus, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        })
+    });
 </script>
-
 
 {% endblock content %}
