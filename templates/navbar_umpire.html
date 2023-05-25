@@ -27,7 +27,12 @@
                     <li><a href="{% url 'umpire:riwayat_ujian_kualifikasi' %}" class="dropdown-item">Riwayat Ujian Kualifikasi</a></li>
                 </ul>
             </li>
-            <a href="{% url 'umpire:list_event' %}" class="nav-item nav-link">Event</a>
+            <li class="nav-item dropdown">
+                <a href="#" id="event" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Event</a>
+                <ul class="dropdown-menu">
+                    <li><a href="" class="dropdown-item">List Partai Kompetisi</a></li>
+                </ul>
+            </li>
             <a href="{% url 'umpire:hasil_pertandingan' %}" class="nav-item nav-link">Hasil Pertandingan</a>
         </div>
         <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
@@ -44,6 +49,17 @@
         var isClickInside = dropdownUjian.contains(event.target);
         if (!isClickInside) {
             dropdownUjian.nextElementSibling.classList.remove('show');
+        }
+    });
+    var dropdownMenu = document.getElementById('event');
+        dropdownMenu.addEventListener('click', function (event) {
+            event.stopPropagation();
+            dropdownMenu.nextElementSibling.classList.toggle('show');
+        });
+     document.addEventListener('click', function (event) {
+        var isClickInside = dropdownMenu.contains(event.target);
+        if (!isClickInside) {
+            dropdownMenu.nextElementSibling.classList.remove('show');
         }
     });
 </script>

@@ -55,7 +55,7 @@
             </li>
             <a href="{% url 'atlet:daftar_sponsor' %}" class="nav-item nav-link">Daftar Sponsor</a>
         </div>
-        <a href="{% url 'accounts:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
 </nav>
 
@@ -80,6 +80,17 @@
         var isClickInside = dropdownUjian.contains(event.target);
         if (!isClickInside) {
             dropdownUjian.nextElementSibling.classList.remove('show');
+        }
+    });
+    var dropdownSponsor = document.getElementById('sponsor');
+    dropdownSponsor.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdownSponsor.nextElementSibling.classList.toggle('show');
+    });
+    document.addEventListener('click', function (event) {
+        var isClickInside = dropdownSponsor.contains(event.target);
+        if (!isClickInside) {
+            dropdownSponsor.nextElementSibling.classList.remove('show');
         }
     });
 </script>
