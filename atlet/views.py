@@ -86,7 +86,7 @@ def form_kualifikasi(request):
 def daftar_event(request):
     with connection.cursor() as cursor:
         cursor.execute(f"""
-            SELECT E.nama_stadium, E.negara, S.kapasitas
+            SELECT DISTINCT E.nama_stadium, E.negara, S.kapasitas
             FROM STADIUM S, EVENT E
             WHERE S.nama = E.nama_stadium
         """)
@@ -115,10 +115,10 @@ def daftar_event(request):
 def daftar_event_detail(request, stadium_id):
     with connection.cursor() as cursor:
         cursor.execute(f"""
-            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries, E.nama_stadium
+            SELECT DISTINCT E.nama_event, E.total_hadiah, E.tgl_mulai, E.kategori_superseries, E.nama_stadium
             FROM EVENT E
             JOIN STADIUM S ON S.nama = E.nama_stadium
-            WHERE E.tgl_mulai > CURRENT_DATE AND S.nama = %s
+            WHERE E.tgl_mulai > CURRENT_DATE AND  S.nama = %s
         """, [stadium_id])
         event_raw = cursor.fetchall()
 
@@ -141,8 +141,186 @@ def daftar_event_detail(request, stadium_id):
         return render(request, "daftar_event_detail.html", context)
 
 
-def pilih_kategori(request):
-    return render(request, "pilih_kategori.html")
+def pilih_kategori(request, event_id):
+    # event_fetch = get_query(f"""
+    #     SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.tgl_selesai, E.kategori_superseries, S.kapasitas, E.nama_stadium, E.negara
+    #     FROM EVENT E
+    #     JOIN STADIUM S ON S.nama = E.nama_stadium
+    #     WHERE E.nama_event = '{event_id}'
+    # """)
+
+    # if request.user.jenis_kelamin == 1:
+    #     md_fetch = get_query(f"""
+    #         SELECT nomor_peserta
+    #         FROM PARTAI_PESERTA_KOMPETISI
+    #         WHERE jenis_partai = 'MD'
+    #         AND nama_event = '{event_id}'
+    #     """)
+
+    #     md = []
+    #     tunggal = "Tunggal Putra"
+    #     ganda = "Ganda Putra"
+
+    #     for res in md_fetch:
+    #         md.append(
+    #         {
+    #             "nomor_peserta_md": res[0],
+    #             "ganda": ganda,
+    #             "tunggal": tunggal,
+    #         }
+    #         )
+    # else:
+    #     wd_fetch = get_query(f"""
+    #         SELECT nomor_peserta
+    #         FROM PARTAI_PESERTA_KOMPETISI
+    #         WHERE jenis_partai = 'WD'
+    #         AND nama_event = '{event_id}'
+    #     """)
+
+    #     wd = []
+    #     tunggal = "Tunggal Putri"
+    #     ganda = "Ganda Putri"
+
+    #     for res in wd_fetch:
+    #         md.append(
+    #         {
+    #             "nomor_peserta_wd": res[0],
+    #             "ganda": ganda,
+    #             "tunggal": tunggal,
+    #         }
+    #         )
+        
+    #     context = {
+    #         "double": wd,
+    #     }
+
+    # xd_fetch = get_query(f"""
+    #         SELECT nomor_peserta
+    #         FROM PARTAI_PESERTA_KOMPETISI
+    #         WHERE jenis_partai = 'XD'
+    #         AND nama_event = '{event_id}'
+    #     """)
+    
+    # campuran = "Ganda Campuran"
+
+    # event = []
+    # xd = []
+    
+    # for res in event_fetch:
+    #     event.append(
+    #     {
+    #         "nama_event": res[0],
+    #         "total_hadiah": res[1],
+    #         "tgl_mulai": res[2],
+    #         "tgl_selesai": res[3],
+    #         "kategori_superseries": res[4],
+    #         "kapasitas": res[5],
+    #         "negara": res[6],
+    #     }
+    # )
+
+    # event.append(
+    #     {
+    #         "nama_stadium": stadium_nama,
+    #     }
+    # )
+
+    # for res in xd_fetch:
+    #     xd.append(
+    #     {
+    #         "nomor_peserta_xd": res[0],
+    #         "campuran": campuran,
+    #     }
+    # )
+        
+    # context["xd"] = xd,
+    # context["event"] = event,
+
+    # if (request.method == "post".upper):
+    #     kategori = request.POST["kategori"]
+    #     partner = request.POST["partner"]
+    #     print(kategori)
+    #     print(partner)
+    #     get_query("SET SEARCH_PATH TO BABADU")
+    #     get_query(f"""
+    #         INSERT INTO 
+    #     """)
+
+    
+
+    with connection.cursor() as cursor:
+        cursor.execute(f"""
+            SELECT E.nama_event, E.total_hadiah, E.tgl_mulai, E.tgl_selesai, E.kategori_superseries, S.kapasitas, E.nama_stadium, E.negara
+            FROM EVENT E
+            JOIN STADIUM S ON S.nama = E.nama_stadium
+            WHERE E.nama_event = %s
+        """, [event_id])
+        detail_event_raw = cursor.fetchall()
+
+        detail_event = []
+
+        for res in detail_event_raw:
+            detail_event.append(
+                {
+                    "nama_event": res[0],
+                    "total_hadiah": res[1],
+                    "tgl_mulai": res[2],
+                    "tgl_selesai": res[3],
+                    "kategori_superseries": res[4],
+                    "kapasitas": res[5],
+                    "nama_stadium": res[6],
+                    "negara": res[7],
+                }
+            )
+        
+        cursor.execute(f"""
+            SELECT P.jenis_partai AS kategori, M.nama, S.kapasitas
+            FROM PARTAI_PESERTA_KOMPETISI P
+            JOIN PESERTA_KOMPETISI AS PK ON PK.nomor_peserta = P.nomor_peserta
+            JOIN MEMBER M ON M.id = PK.id_atlet_kualifikasi or M.id = PK.id_atlet_ganda
+            JOIN EVENT E ON E.nama_event = P.nama_event
+            JOIN STADIUM S ON S.nama = E.nama_stadium
+            WHERE P.nama_event = %s
+        """, [event_id])
+        kategori_raw = cursor.fetchall()
+
+        kategori = []
+        
+        # if kategori == []:
+        #     cursor.execute(f"""
+        #         SELECT id_atlet_ganda
+        #         FROM ATLET_GANDA
+        #         WHERE id_atlet_kualifikasi = '{id}' OR id_atlet_kualifikasi_2 = '{id}'
+        #     """)
+        #     atlet_ganda_raw = cursor.fetchall()
+
+        #     id_atlet_ganda = atlet_ganda_raw[0]
+        #     cursor.execute(f"""
+        #         SELECT P.jenis_partai AS kategori, M.nama, S.kapasitas
+        #         FROM PARTAI_PESERTA_KOMPETISI P
+        #         JOIN PESERTA_KOMPETISI AS PK ON PK.nomor_peserta = P.nomor_peserta
+        #         JOIN MEMBER M ON M.id = PK.id_atlet_kualifikasi or N.id = '{id_atlet_ganda}
+        #         JOIN EVENT E ON E.nama_event = P.nama_event
+        #         JOIN STADIUM S ON S.nama = E.nama_stadium
+        #         WHERE P.nama_event = %s
+        #     """, [event_id])
+        #     kategori_raw = cursor.fetchall()
+
+        for res in kategori_raw:
+            kategori.append(
+                {
+                    "jenis_partai": res[0],
+                    "nama": res[1],
+                    "kapasitas": res[2],
+                }
+            )
+
+        context = {
+            "detail_event": detail_event,
+            "kategori": kategori
+        }
+
+        return render(request, "pilih_kategori.html", context)
 
 def enrolled_partai_kompetisi(request):
     # id = str(request.session["id"]).strip()

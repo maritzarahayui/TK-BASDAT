@@ -37,84 +37,66 @@
 </nav>
 
 <header>
-  <h1>Pilih Kategori</h1>
+  <h1>FORM PEMILIHAN PARTAI KOMPETISI</h1>
 </header>
 
 <td class="align-middle">
   <div class="d-flex justify-content-center">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">PILIH KATEGORI</h5>
-        <p>Event: EventA</p>
-        <p>Hadiah: Rp 5.000.000</p>
-        <p>Tanggal Mulai: 12-04-2023</p>
-        <p>Tanggal Selesai: 15-04-2023</p>
-        <p>Kategori: S200</p>
-        <p>Kapasitas: 50/64</p>
-        <p>Stadium: GBK</p>
-        <p>Negara: Indonesia</p>
+
+        {% for item in detail_event %}
+          <p>Event: {{ item.nama_event }}</p>
+          <p>Hadiah: {{ item.total_hadiah }}</p>
+          <p>Tanggal Mulai: {{ item.tgl_mulai }}</p>
+          <p>Tanggal Selesai: {{ item.tgl_selesai }}</p>
+          <p>Kategori: {{ item.kategori_superseries }}</p>
+          <p>Kapasitas: {{ item.kapasitas }} orang atau pasangan / partai</p>
+          <p>Stadium: {{ item.nama_stadium }}</p>
+          <p>Negara: {{ item.negara }}</p>
+        {% endfor %}
+
         <table class="table">
           <thead>
             <tr>
               <th scope="col">Kategori</th>
               <th scope="col">Partner</th>
-              <th scope="col"></th>
+              <th scope="col">Kapasitas</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Tunggal Putra</td>
-              <td>-</td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">
-                  Join
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Ganda Putra</td>
-              <td>
-                <select
-                  class="custom-select custom-select-sm d-inline-block"
-                  style="width: auto"
-                >
-                  <option selected>Pilih Atlet...</option>
-                  <option value="1">Atlet 1</option>
-                  <option value="2">Atlet 2</option>
-                  <option value="3">Atlet 3</option>
-                </select>
-              </td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">
-                  Join
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Ganda Campuran</td>
-              <td>
-                <select
-                  class="custom-select custom-select-sm d-inline-block"
-                  style="width: auto"
-                >
-                  <option selected>Pilih Atlet...</option>
-                  <option value="1">Atlet 1</option>
-                  <option value="2">Atlet 2</option>
-                  <option value="3">Atlet 3</option>
-                </select>
-              </td>
-              <td>
-                <button type="button" class="btn btn-primary btn-dark">
-                  Join
-                </button>
-              </td>
-            </tr>
+            {% for item in kategori %}
+              <tr>
+                <td>{{ item.jenis_partai }}</td>
+                {% if item.jenis_partai == 'WS' or item.jenis_partai == 'MS' %}
+                  <td>-</td>
+                {% else %}
+                <td>
+                  <select class="custom-select custom-select-sm d-inline-block" style="width: auto">  
+                    <option selected>Pilih Atlet</option>  
+                    <option value="item">{{ item.nama }}</option>
+                  </select>
+                </td>
+                {% endif %}
+                <td>{{ item.kapasitas }}</td>
+                {% if item.kapasitas > 0 %}
+                <td>
+                  <!-- button join muncul kalo kapasitas masih ada -->
+                  <a href="{% url 'atlet:enrolled_event' %}">
+                    <button type="button" class="btn btn-primary btn-dark">Join</button>
+                  </a>
+                </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </td>
+
 <style type="text/css">
   body {
     background-color: var(--dark);

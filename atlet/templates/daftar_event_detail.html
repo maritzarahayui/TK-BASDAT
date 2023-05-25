@@ -63,7 +63,7 @@
                 <td>{{item.kategori_superseries}}</td>
 
                 <td>
-                  <a href="{% url 'umpire:list_event' %}">
+                  <a href="{% url 'atlet:pilih_kategori' event_id=item.nama_event %}">
                     <button type="button" class="btn btn-primary btn-dark">Pilih</button>
                   </a>
                 </td>
