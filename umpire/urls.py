@@ -4,7 +4,7 @@ from umpire import views
 app_name = "umpire"
 
 urlpatterns = [
-    path('peryandingan/', views.pertandingan_page, name="pertandingan_page"),
+    path('pertandingan/<event>/<partai>/<tahun>', views.pertandingan_page, name="pertandingan_page"),
     path('register/', views.register_umpire, name="register-umpire"),
     path('semifinal/', views.semifinal_page, name="semifinal_page"),
     path('juara-3/', views.juara3_page, name="juara3_page"),
@@ -17,4 +17,5 @@ urlpatterns = [
     path('buat_ujian_kualifikasi/', views.buat_ujian_kualifikasi, name="buat_ujian_kualifikasi"),
     path('list_ujian_kualifikasi/', views.list_ujian_kualifikasi_umpire, name="list_ujian_kualifikasi"),
     path('riwayat_ujian_kualifikasi/', views.riwayat_ujian_kualifikasi_umpire, name="riwayat_ujian_kualifikasi"),
+    path('simpan_pertandingan', views.simpan_pertandingan, name='simpan_pertandingan'),
 ]
