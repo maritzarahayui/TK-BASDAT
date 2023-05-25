@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-^lu8g2#t$$8c04y8tyx61_!yiqwnn@470&5x2$7o%upn=msmqf
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ["https://babadu-kelompok-5.up.railway.app"]
 
 # Application definition
 
