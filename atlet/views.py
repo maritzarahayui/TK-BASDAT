@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from collections import namedtuple
 from django.db import *
 import psycopg2
@@ -76,7 +77,6 @@ def register_atlet(request):
 
 
     return render(request, "register_atlet.html")
-
 
 def dashboard_atlet(request):
     nama = request.session["nama"]
@@ -429,6 +429,10 @@ def enrolled_event(request):
         WHERE nomor_peserta = '{nomor_peserta}' AND nama_event = '{nama_event}' AND tahun_event = '{tahun_event}'
             '''
         )
+        messages.error(request, 'cannot unenroll passed event')
+    
+    else:
+        messages.success(request, "event unenrolled")
     
     query = get_query(
         f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
@@ -451,7 +455,7 @@ def enrolled_event(request):
         WHERE pes.nomor_peserta = rol.nomor_peserta AND e.nama_event = rol.nama_event AND e.tahun_event = rol.tahun AND id_atlet_ganda = '{id_ganda[0].id_atlet_ganda}';
             '''
         )    
-    
+
     return render(request, "enrolled_event.html", {"query" : query})
 
 def daftar_sponsor(request):
@@ -498,7 +502,7 @@ def daftar_sponsor(request):
         '''
     )
 
-    return render(request, "daftar_sponsor.html", {"query":query})
+    return redirect("atlet:list_sponsor")
 
 def list_sponsor(request):
     nama = request.session["nama"]
