@@ -1,8 +1,9 @@
 {% load static %}
 
 {% block meta %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock meta %}
 
 {% block content %}
@@ -20,30 +21,31 @@
                 <a href="{% url 'pelatih:dashboard_pelatih' %}" class="nav-link active">Dashboard</a>
             </li>
             <li class="nav-item dropdown">
-                <a href="#" id="latih-atlet" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Latih Atlet</a>
+                <a href="#" id="latih-atlet" data-bs-toggle="dropdown" class="nav-link dropdown-toggle"
+                    data-bs-display="static">Latih Atlet</a>
                 <ul class="dropdown-menu">
-                    <li><a href="" class="dropdown-item">Create Latih Atlet</a></li>
-                    <li><a href="" class="dropdown-item">List Atlet Dilatih</a></li>
+                    <li><a href="{% url 'pelatih:daftar_atlet' %}" class="dropdown-item">Create Latih Atlet</a></li>
+                    <li><a href="{% url 'pelatih:list_atlet' %}" class="dropdown-item">List Atlet Dilatih</a></li>
                 </ul>
             </li>
         </ul>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
+        <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
-    </nav>
+</nav>
 
-    <script>
-        var dropdownMenu = document.getElementById('latih-atlet');
-        dropdownMenu.addEventListener('click', function (event) {
-            event.stopPropagation();
-            dropdownMenu.nextElementSibling.classList.toggle('show');
-        });
-        document.addEventListener('click', function (event) {
-            var isClickInside = dropdownMenu.contains(event.target);
-            if (!isClickInside) {
-                dropdownMenu.nextElementSibling.classList.remove('show');
-            }
-        });
-    </script>
+<script>
+    var dropdownMenu = document.getElementById('latih-atlet');
+    dropdownMenu.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdownMenu.nextElementSibling.classList.toggle('show');
+    });
+    document.addEventListener('click', function (event) {
+        var isClickInside = dropdownMenu.contains(event.target);
+        if (!isClickInside) {
+            dropdownMenu.nextElementSibling.classList.remove('show');
+        }
+    });
+</script>
 
-   
+
 {% endblock content %}

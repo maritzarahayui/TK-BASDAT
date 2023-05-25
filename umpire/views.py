@@ -10,6 +10,7 @@ from django.http import JsonResponse
 import json
 from django.db import transaction
 
+
 def register_umpire(request):
     if request.method == "post".upper():
         id = uuid1()
@@ -80,7 +81,7 @@ def pertandingan_page(request, event, partai, tahun):
             "tim1": tim1,
             "tim2": tim2,
         }
-        
+
         if tim1['id_atlet_ganda'] != None:
             atlet_ganda = query(f"""
                 SELECT ag.* FROM atlet_ganda as ag WHERE ag.id_atlet_ganda = '{tim1['id_atlet_ganda']}' LIMIT 1
@@ -90,7 +91,7 @@ def pertandingan_page(request, event, partai, tahun):
                 SELECT * FROM member as m WHERE m.id IN
                 ('{atlet_ganda['id_atlet_kualifikasi']}', '{atlet_ganda['id_atlet_kualifikasi_2']}')
                 LIMIT 2
-            """)        
+            """)
             tim1['nama'] = " & ".join(
                 map(lambda member: member['nama'], member_ganda_1))
         else:
@@ -138,10 +139,10 @@ def pertandingan_page(request, event, partai, tahun):
     jenis_pertandingan, babak = rounds.get(total_peserta, ("", ""))
     konteks = {
         'lst_pertandingan': lst_pertandingan,
-        'event' : event,
+        'event': event,
         'tahun': tahun,
         'jenis_pertandingan': jenis_pertandingan,
-        'partai' : partai,
+        'partai': partai,
         'babak': babak,
         'total_peserta': total_peserta
     }
@@ -209,7 +210,8 @@ def simpan_pertandingan(request):
         return JsonResponse({
             "next_babak": nextBabak,
         })
-    
+
+
 def semifinal_page(request):
     return render(request, "semifinal_page.html")
 
@@ -226,9 +228,9 @@ def hasil_pertandingan(request):
     nama_event = unquote(request.GET.get("nama_event"))
     tahun_event = request.GET.get("tahun_event")
     jenis_partai = request.GET.get("jenis_partai")
-    pprint(nama_event)
-    pprint(tahun_event)
-    pprint(jenis_partai)
+    # pprint(nama_event)
+    # pprint(tahun_event)
+    # pprint(jenis_partai)
     with connection.cursor() as cursor:
         cursor.execute(f"""
         SELECT PK.Jenis_partai, E.Nama_event, E.Nama_stadium, E.total_hadiah,
@@ -269,6 +271,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = TRUE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         OR ID IN
         (SELECT AG.ID_ATLET_KUALIFIKASI_2
@@ -279,6 +283,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = TRUE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}');
         """)
 
@@ -301,6 +307,8 @@ def hasil_pertandingan(request):
         JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = TRUE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         """)
 
@@ -323,6 +331,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         OR ID IN
         (SELECT AG.ID_ATLET_KUALIFIKASI_2
@@ -333,6 +343,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}');
         """)
 
@@ -344,7 +356,7 @@ def hasil_pertandingan(request):
                     "atlet": res[0]
                 }
             )
-    
+
         cursor.execute(f"""
         SELECT NAMA FROM MEMBER WHERE ID IN  
         (SELECT AK.ID_ATLET
@@ -354,6 +366,8 @@ def hasil_pertandingan(request):
         JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
         WHERE PMG.JENIS_BABAK = 'FINAL'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         """)
 
@@ -375,7 +389,9 @@ def hasil_pertandingan(request):
         JOIN ATLET_GANDA AG
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'SF'
-        AND PMG.STATUS_MENANG = TRUE
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         OR ID IN
         (SELECT AG.ID_ATLET_KUALIFIKASI_2
@@ -385,7 +401,9 @@ def hasil_pertandingan(request):
         JOIN ATLET_GANDA AG
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'SF'
-        AND PMG.STATUS_MENANG = TRUE
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}');
         """)
 
@@ -406,7 +424,9 @@ def hasil_pertandingan(request):
         NATURAL JOIN PESERTA_KOMPETISI PK
         JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
         WHERE PMG.JENIS_BABAK = 'SF'
-        AND PMG.STATUS_MENANG = TRUE
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         """)
 
@@ -429,6 +449,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'SF'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         OR ID IN
         (SELECT AG.ID_ATLET_KUALIFIKASI_2
@@ -439,6 +461,8 @@ def hasil_pertandingan(request):
         ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
         WHERE PMG.JENIS_BABAK = 'SF'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}');
         """)
 
@@ -460,6 +484,8 @@ def hasil_pertandingan(request):
         JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
         WHERE PMG.JENIS_BABAK = 'SF'
         AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
         AND PPK.JENIS_PARTAI = '{jenis_partai}')
         """)
 
@@ -467,6 +493,65 @@ def hasil_pertandingan(request):
         semifinal_tunggal = []
         for res in semifinal_tunggal_raw:
             semifinal_tunggal.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AG.ID_ATLET_KUALIFIKASI
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'QF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        OR ID IN
+        (SELECT AG.ID_ATLET_KUALIFIKASI_2
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_GANDA AG
+        ON AG.ID_ATLET_GANDA = PK.ID_ATLET_GANDA
+        WHERE PMG.JENIS_BABAK = 'QF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
+        AND PPK.JENIS_PARTAI = '{jenis_partai}');
+        """)
+
+        perempat_final_ganda_raw = cursor.fetchall()
+        perempat_final_ganda = []
+        for res in perempat_final_ganda_raw:
+            perempat_final_ganda.append(
+                {
+                    "atlet": res[0]
+                }
+            )
+
+        cursor.execute(f"""
+        SELECT NAMA FROM MEMBER WHERE ID IN  
+        (SELECT AK.ID_ATLET
+        FROM PESERTA_MENGIKUTI_MATCH PMG
+        NATURAL JOIN PARTAI_PESERTA_KOMPETISI PPK
+        NATURAL JOIN PESERTA_KOMPETISI PK
+        JOIN ATLET_KUALIFIKASI AK ON AK.ID_ATLET = PK.ID_ATLET_KUALIFIKASI
+        WHERE PMG.JENIS_BABAK = 'QF'
+        AND PMG.STATUS_MENANG = FALSE
+        AND PPK.NAMA_EVENT = '{nama_event}'
+        AND PPK.TAHUN_EVENT = '{tahun_event}'
+        AND PPK.JENIS_PARTAI = '{jenis_partai}')
+        """)
+
+        perempat_final_tunggal_raw = cursor.fetchall()
+        perempat_final_tunggal = []
+        for res in perempat_final_tunggal_raw:
+            perempat_final_tunggal.append(
                 {
                     "atlet": res[0]
                 }
@@ -482,6 +567,8 @@ def hasil_pertandingan(request):
         'juara_tiga_tunggal': juara_tiga_tunggal,
         'semifinal_ganda': semifinal_ganda,
         'semifinal_tunggal': semifinal_tunggal,
+        'perempat_final_ganda': perempat_final_ganda,
+        'perempat_final_tunggal': perempat_final_tunggal,
     }
     return render(request, "hasil_pertandingan.html", context)
 
@@ -617,12 +704,13 @@ def get_daftar_atlet(request):
 
     return render(request, "get_daftar_atlet.html", context)
 
+
 def buat_ujian_kualifikasi(request):
 
     # DB Connection
     cur = connection.cursor()
 
-    context={}
+    context = {}
 
     if request.method == 'POST':
         tahun = request.POST.get('tahun')
@@ -635,11 +723,11 @@ def buat_ujian_kualifikasi(request):
         print(batch)
         print(tempat_pelaksanaan)
         print(tanggal_pelaksanaan)
-        
-        if tahun == "" or batch ==  "" or tempat_pelaksanaan == "" or tanggal_pelaksanaan == None :
-            context["error_message"] =  "Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu."
+
+        if tahun == "" or batch == "" or tempat_pelaksanaan == "" or tanggal_pelaksanaan == None:
+            context["error_message"] = "Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu."
             return render(request, "buat_ujian_kualifikasi.html", context)
-    
+
         # SQL Query
         cur.execute(
             """
@@ -647,10 +735,11 @@ def buat_ujian_kualifikasi(request):
             """,
             [int(tahun), int(batch), tempat_pelaksanaan, tanggal_pelaksanaan]
         )
-       
+
         print("berhasil nambahin")
 
     return render(request, "buat_ujian_kualifikasi.html")
+
 
 def list_ujian_kualifikasi_umpire(request):
 
@@ -658,27 +747,28 @@ def list_ujian_kualifikasi_umpire(request):
     cur = connection.cursor()
 
     # SQL Query
-    cur.execute(""" SELECT * FROM ujian_kualifikasi; """)   
-    dataUjian = cur.fetchall() 
+    cur.execute(""" SELECT * FROM ujian_kualifikasi; """)
+    dataUjian = cur.fetchall()
 
     batch, tahun, tempat, tanggal = ([] for i in range(4))
     for data in dataUjian:
-            batch.append(data[0])
-            tahun.append(data[1])
-            tempat.append(data[2])
-            tanggal.append(str(data[3]))
+        batch.append(data[0])
+        tahun.append(data[1])
+        tempat.append(data[2])
+        tanggal.append(str(data[3]))
 
-    context =  {}
+    context = {}
     context['ujian'] = zip(batch,
-                        tahun,
-                        tempat,
-                        tanggal)
-    
+                           tahun,
+                           tempat,
+                           tanggal)
+
     return render(request, "list_ujian_kualifikasi_umpire.html",  context)
+
 
 def riwayat_ujian_kualifikasi_umpire(request):
 
-     # DB Connection
+    # DB Connection
     cur = connection.cursor()
 
     # SQL Query
@@ -689,24 +779,24 @@ def riwayat_ujian_kualifikasi_umpire(request):
             WHERE M.id IN (SELECT A.id FROM ATLET) AND N.id_atlet = M.id AND N.tempat = U.tempat
             AND N.batch = U.batch AND N.tempat = U.tempat AND N.tanggal = U.tanggal; 
         """
-    )   
-    dataUjian = cur.fetchall() 
+    )
+    dataUjian = cur.fetchall()
 
     nama, tahun, batch, tempat, tanggal, hasil = ([] for i in range(6))
     for data in dataUjian:
-            nama.append(data[0])
-            tahun.append(data[1])
-            batch.append(data[2])
-            tempat.append(data[3])
-            tanggal.append(str(data[4]))
-            hasil.append(data[5])
+        nama.append(data[0])
+        tahun.append(data[1])
+        batch.append(data[2])
+        tempat.append(data[3])
+        tanggal.append(str(data[4]))
+        hasil.append(data[5])
 
-    context =  {}
+    context = {}
     context['ujian'] = zip(nama,
-                        tahun,
-                        batch,
-                        tempat,
-                        tanggal,
-                        hasil)
-    
+                           tahun,
+                           batch,
+                           tempat,
+                           tanggal,
+                           hasil)
+
     return render(request, "riwayat_ujian_kualifikasi_umpire.html",  context)
