@@ -72,7 +72,6 @@ def loginHelper(request):
         data = {
             "status" : "failed",
         }
-    cur.close()
     
     return JsonResponse(data)
 

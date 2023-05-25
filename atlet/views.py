@@ -158,11 +158,15 @@ def tes_kualifikasi(request):
     batch = request.session['batch']
     tempat_pelaksanaan = request.session['tempat_pelaksanaan']
     tanggal_pelaksanaan = request.session['tanggal_pelaksanaan']
+    tahun = request.session['tahun']
+    status =  request.session['status']
 
     cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
     id_atlet = cur.fetchone()[0] 
 
     print(id_atlet)
+    print(status)
+    print(tahun)
     print(batch)
     print(tempat_pelaksanaan)
     print(tanggal_pelaksanaan)
@@ -191,9 +195,22 @@ def tes_kualifikasi(request):
         cur.execute(""" SELECT id FROM MEMBER WHERE nama = %s AND email = %s; """, [nama, email])
         id_atlet = cur.fetchone()[0] 
 
-        if score >= 4:
+
+        if score >= 4 and status == 'Not Qualified':
             print("yeyyy lulus:)")
-            #
+            
+            cur.execute("""
+                UPDATE atlet_nonkualifikasi_ujian_kualifikasi
+                SET hasil_lulus = TRUE 
+                WHERE id_atlet = %s
+                    AND tahun = %s
+                    AND batch = %s
+                    AND tempat = %s
+                    AND tanggal = CAST(%s AS DATE)
+                """,
+                [id_atlet, int(tahun), int(batch), tempat_pelaksanaan, tanggal_pelaksanaan]
+            )
+
         else:
             print("nooo ga lulus:(")
         print(score)
@@ -228,6 +245,7 @@ def list_ujian_kualifikasi_atlet(request):
         try:
             # Mengambil data dari POST
             batch = request.POST.get('batch')
+            tahun = request.POST.get('tahun')
             tempat_pelaksanaan = request.POST.get('tempat')
             tanggal_pelaksanaan = request.POST.get('tanggal')
 
@@ -240,6 +258,7 @@ def list_ujian_kualifikasi_atlet(request):
 
             # Set data ke Session
             request.session['batch'] = batch
+            request.session['tahun'] = tahun
             request.session['tempat_pelaksanaan'] = tempat_pelaksanaan
             request.session['tanggal_pelaksanaan'] = tanggal_pelaksanaan
 
@@ -266,6 +285,8 @@ def list_ujian_kualifikasi_atlet(request):
             """, [id_atlet, id_atlet])
             status = cur.fetchone()[0]
 
+            request.session['status'] = status
+
             if status == 'Not Qualified':
                 # SQL Query
                 cur.execute("""
@@ -282,7 +303,7 @@ def list_ujian_kualifikasi_atlet(request):
             print("uda pernah ngambil")
             error_message = "Anda sudah pernah mengambil ujian kualifikasi yang dipilih."
             context["error_message"] =  error_message            
-            return render(request, "form_kualifikasi.html", context)
+            return render(request, "list_ujian_kualifikasi_atlet.html", context)
 
     return render(request, "list_ujian_kualifikasi_atlet.html",  context)
 
