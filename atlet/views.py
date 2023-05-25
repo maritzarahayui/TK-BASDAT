@@ -79,7 +79,70 @@ def register_atlet(request):
 
 
 def dashboard_atlet(request):
-    return render(request, "dashboard_atlet.html")
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
+
+    query = get_query(
+        f'''SELECT m.nama, negara_asal, email, tgl_lahir, play_right, height, jenis_kelamin, world_rank FROM ATLET A, MEMBER M WHERE A.id = '{id}' AND M.id = A.id GROUP BY m.nama, negara_asal, email, tgl_lahir, play_right, height, jenis_kelamin, world_rank;
+        '''
+    )
+    
+    query.append(get_query(
+        f'''SELECT SUM(total_point) FROM POINT_HISTORY WHERE id_atlet = '{id}'
+        '''
+    ))
+    
+    query.append(get_query(
+        f'''SELECT nama FROM MEMBER M, ATLET_PELATIH AP
+        WHERE AP.id_atlet = '{id}' AND AP.id_pelatih = M.id
+        '''
+    ))
+    
+    if (query[0][4]):
+        play = "Right Hand"
+    else:
+        play = "Left Hand"
+    
+    if (query[0][6]):
+        jenis_kelamin = "Laki-laki"
+    else:
+        jenis_kelamin = "Perempuan"
+        
+    if (query[0][7] == None):
+        world_rank = "-"
+        status = "Not Qualified"
+    else:
+        world_rank = query[0][7]
+        status = "Qualified"
+        
+    if (query[2] ==  []):
+        pelatih = "-"
+    else:
+        pelatih = query[2][0][0]
+        
+    if (query[1][0][0] == None):
+        poin = 0
+    else:
+        poin = query[1][0][0]
+    
+    context = {
+        "nama": nama,
+        "email": email,
+        "negara": query[0][1],
+        "tgl_lahir": query[0][3],
+        "jenis_kelamin": jenis_kelamin,
+        "play" : play,
+        "status" : status,
+        "height": query[0][5],
+        "world_rank": world_rank,
+        "pelatih" : pelatih,
+        "poin" : poin
+    }
+    return render(request, "dashboard_atlet.html", context)
 
 
 def tes_kualifikasi(request):
@@ -286,8 +349,12 @@ def pilih_kategori(request):
     return render(request, "pilih_kategori.html")
 
 def enrolled_partai_kompetisi(request):
-    # id = str(request.session["id"]).strip()
-    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
     
     query = get_query(
         f'''SELECT par.nama_event, par.tahun_event, nama_stadium, par.jenis_partai, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai
@@ -314,9 +381,12 @@ def enrolled_partai_kompetisi(request):
     return render(request, "enrolled_partai_kompetisi.html", {"query": query})
 
 def enrolled_event(request):
-    # id = str(request.session["id"]).strip()
-    id = 'e2fac2f5-b3d7-4987-a386-45de0aeb812e'
-    # id = 'c2b8357e-7865-4939-8be0-97b283320eaf'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
     
     query = get_query(
         f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
@@ -359,8 +429,6 @@ def enrolled_event(request):
         WHERE nomor_peserta = '{nomor_peserta}' AND nama_event = '{nama_event}' AND tahun_event = '{tahun_event}'
             '''
         )
-        
-    print(delete)
     
     query = get_query(
         f'''SELECT rol.nama_event, rol.tahun, nama_stadium, total_hadiah, kategori_superseries, tgl_mulai, tgl_selesai, pes.nomor_peserta
@@ -387,8 +455,12 @@ def enrolled_event(request):
     return render(request, "enrolled_event.html", {"query" : query})
 
 def daftar_sponsor(request):
-    # id = str(request.session["id"]).strip()
-    id = 'aa8a676a-07a3-4eb6-bcec-54a74ee35c93'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
 
     query = get_query(
         f'''SELECT nama_brand
@@ -429,8 +501,12 @@ def daftar_sponsor(request):
     return render(request, "daftar_sponsor.html", {"query":query})
 
 def list_sponsor(request):
-    # id = str(request.session["id"]).strip()
-    id = 'aa8a676a-07a3-4eb6-bcec-54a74ee35c93'
+    nama = request.session["nama"]
+    email = request.session["email"]
+    id = get_query(
+        f'''SELECT id FROM MEMBER WHERE nama='{nama}' AND email = '{email}'
+        '''
+    )[0][0]
 
     query = get_query(
         f'''SELECT nama_brand, tgl_mulai, tgl_selesai
