@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-^lu8g2#t$$8c04y8tyx61_!yiqwnn@470&5x2$7o%upn=msmqf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tk-basdat-production-b5f4.up.railway.app/', '*']
+ALLOWED_HOSTS = ['tk-basdat-production-b5f4.up.railway.app', '*']
 
 
 # Application definition
