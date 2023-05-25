@@ -456,3 +456,97 @@ def get_daftar_atlet(request):
     }
 
     return render(request, "get_daftar_atlet.html", context)
+
+def buat_ujian_kualifikasi(request):
+
+    # DB Connection
+    cur = connection.cursor()
+
+    context={}
+
+    if request.method == 'POST':
+        tahun = request.POST.get('tahun')
+        batch = request.POST.get('batch')
+        tempat_pelaksanaan = request.POST.get('tempat')
+        tanggal_pelaksanaan = request.POST.get('tanggal')
+
+        # Cek
+        print(tahun)
+        print(batch)
+        print(tempat_pelaksanaan)
+        print(tanggal_pelaksanaan)
+        
+        if tahun == "" or batch ==  "" or tempat_pelaksanaan == "" or tanggal_pelaksanaan == None :
+            context["error_message"] =  "Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu."
+            return render(request, "buat_ujian_kualifikasi.html", context)
+    
+        # SQL Query
+        cur.execute(
+            """
+            INSERT INTO UJIAN_KUALIFIKASI VALUES (%s, %s, %s, CAST(%s AS DATE));
+            """,
+            [int(tahun), int(batch), tempat_pelaksanaan, tanggal_pelaksanaan]
+        )
+       
+        print("berhasil nambahin")
+
+    return render(request, "buat_ujian_kualifikasi.html")
+
+def list_ujian_kualifikasi_umpire(request):
+
+    # DB Connection
+    cur = connection.cursor()
+
+    # SQL Query
+    cur.execute(""" SELECT * FROM ujian_kualifikasi; """)   
+    dataUjian = cur.fetchall() 
+
+    batch, tahun, tempat, tanggal = ([] for i in range(4))
+    for data in dataUjian:
+            batch.append(data[0])
+            tahun.append(data[1])
+            tempat.append(data[2])
+            tanggal.append(str(data[3]))
+
+    context =  {}
+    context['ujian'] = zip(batch,
+                        tahun,
+                        tempat,
+                        tanggal)
+    
+    return render(request, "list_ujian_kualifikasi_umpire.html",  context)
+
+def riwayat_ujian_kualifikasi_umpire(request):
+
+     # DB Connection
+    cur = connection.cursor()
+
+    # SQL Query
+    cur.execute(
+        """ 
+            SELECT M.nama, U.tahun, U.batch, U.tempat, U.tanggal, N.hasil_lulus
+            FROM member M, atlet A, ujian_kualifikasi U, ATLET_NONKUALIFIKASI_UJIAN_KUALIFIKASI N
+            WHERE M.id IN (SELECT A.id FROM ATLET) AND N.id_atlet = M.id AND N.tempat = U.tempat
+            AND N.batch = U.batch AND N.tempat = U.tempat AND N.tanggal = U.tanggal; 
+        """
+    )   
+    dataUjian = cur.fetchall() 
+
+    nama, tahun, batch, tempat, tanggal, hasil = ([] for i in range(6))
+    for data in dataUjian:
+            nama.append(data[0])
+            tahun.append(data[1])
+            batch.append(data[2])
+            tempat.append(data[3])
+            tanggal.append(str(data[4]))
+            hasil.append(data[5])
+
+    context =  {}
+    context['ujian'] = zip(nama,
+                        tahun,
+                        batch,
+                        tempat,
+                        tanggal,
+                        hasil)
+    
+    return render(request, "riwayat_ujian_kualifikasi_umpire.html",  context)

@@ -27,8 +27,6 @@ def loginHelper(request):
     cur = connection.cursor()
 
     # SQL Query
-    cur.execute("""SELECT * FROM MEMBER;""")
-    member = cur.fetchall()
     cur.execute("""SELECT M.id, M.nama,M.email FROM MEMBER M, ATLET A
                     WHERE M.id=A.id;""")
     atlet = cur.fetchall()

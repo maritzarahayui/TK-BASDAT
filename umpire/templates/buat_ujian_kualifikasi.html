@@ -11,53 +11,42 @@
 
 {% block content %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-    <a href="" class="navbar-brand p-0">
-        <h1 class="text-title m-0">>Babadu</h1>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="fa fa-bars"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto py-0 pe-4">
-            <a href="{% url 'atlet:dashboard_atlet' %}" class="nav-item nav-link">Dashboard</a>
-            <a href="{% url 'atlet:form_kualifikasi' %}" class="nav-item nav-link active">Tes Kualifikasi</a>
-            <a href="{% url 'atlet:daftar_event' %}" class="nav-item nav-link">Daftar Event</a>
-            <a href="" class="nav-item nav-link">Enrolled Event</a>
-            <a href="" class="nav-item nav-link">Daftar Sponsor</a>
-        </div>
-        <a href="" class="btn btn-logout py-2 px-4">Logout</a>
-    </div>
-  </nav>
+<!-- Navbar -->
+{% include 'navbar_umpire.html' %}
+
 
 <div class="container-fluid">
     <div class="d-flex justify-content-center">
-    <form>
-        <h2>Form Data Kualifikasi</h2>
+        <form method="POST">
+        {% csrf_token %}
+        <h2>Form Ujian Kualifikasi</h2>
     
+        <label class="questions">Tahun</label>
+        <div class="input mb-3">
+            <input type="text" name="tahun" class="form-control" placeholder="Tahun">
+        </div>
+
         <label class="questions">Batch</label>
         <div class="input mb-3">
-            <input type="text" class="form-control" placeholder="Batch">
+            <input type="text" name="batch" class="form-control" placeholder="Batch">
         </div>
-    
-        <label class="questions">Tempat Pelaksanaan</label>
         
-        <select class="form-select">
-            <option selected>Pilih Tempat</option>
-            {% for sql_tempat in tempat %}
-                <option value="1">{{ sql_tempat }}</option>
-            {% endfor %}
-        </select>
-    
+        <label class="questions">Tempat Pelaksanaan</label>
+        <div class="input mb-3">
+            <input type="text" name="tempat" class="form-control" placeholder="Tempat Pelaksanaan">
+        </div>
+
         <label class="questions">Tanggal Pelaksanaan</label>
-        <select class="form-select">
-            <option selected>Pilih Tanggal</option>
-            {% for sql_tanggal in tanggal %}
-                <option value="1">{{ sql_tanggal }}</option>
-            {% endfor %}
-        </select>
+        <div class="input mb-3">
+            <input type="date" name="tanggal" class="form-control">
+        </div>
+
+        <!-- <p style="color: red; font-size: 12px;">Anda sudah pernah mengambil ujian kualifikasi yang dipilih.</p> -->
+        {% if error_message %}
+            <p style="color: red; font-size: 12px;">{{ error_message }}</p>
+        {% endif %}
     
-        <a href=""><button>Next</button></a>
+        <button type="submit">Next</button>
     </form>
     </div>
 </div>
@@ -74,6 +63,7 @@
         margin-top: 2%;
         margin-bottom: 30%;
         height: auto;
+        width: 480px;
         background-color: rgba(255,255,255,0.13);
         position: absolute;
         transform: translate(-50%,-50%);
@@ -128,8 +118,12 @@
         bg: black;
     }
 
+    p {
+        margin-top: 12px;
+    }
+
     button{
-        margin-top: 50px;
+        margin-top: 25px;
         width: 100%;
         background-color: var(--orange);
         color: #080710;
