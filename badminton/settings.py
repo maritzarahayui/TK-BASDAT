@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['tk-basdat-production-b5f4.up.railway.app', '*']
 
+CSRF_TRUSTED_ORIGINS = ['https://tk-basdat-production-b5f4.up.railway.app', 'http://tk-basdat-production-b5f4.up.railway.app']
+
 # Application definition
 
 INSTALLED_APPS = [
