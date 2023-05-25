@@ -20,20 +20,25 @@
             <a href="{% url 'umpire:dashboard_umpire' %}" class="nav-item nav-link active">Dashboard</a>
             <a href="{% url 'umpire:get_daftar_atlet' %}" class="nav-item nav-link">Daftar Atlet</a>
             <li class="nav-item dropdown">
-                <a href="#" id="ujian" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Ujian Kualifikasi</a>
+                <a href="#" id="ujian" data-bs-toggle="dropdown" class="nav-link dropdown-toggle"
+                    data-bs-display="static">Ujian Kualifikasi</a>
                 <ul class="dropdown-menu">
-                    <li><a href="{% url 'umpire:buat_ujian_kualifikasi' %}" class="dropdown-item">Buat Ujian Kualifikasi</a></li>
-                    <li><a href="{% url 'umpire:list_ujian_kualifikasi' %}" class="dropdown-item">List Ujian Kualifikasi</a></li>
-                    <li><a href="{% url 'umpire:riwayat_ujian_kualifikasi' %}" class="dropdown-item">Riwayat Ujian Kualifikasi</a></li>
+                    <li><a href="{% url 'umpire:buat_ujian_kualifikasi' %}" class="dropdown-item">Buat Ujian
+                            Kualifikasi</a></li>
+                    <li><a href="{% url 'umpire:list_ujian_kualifikasi' %}" class="dropdown-item">List Ujian
+                            Kualifikasi</a></li>
+                    <li><a href="{% url 'umpire:riwayat_ujian_kualifikasi' %}" class="dropdown-item">Riwayat Ujian
+                            Kualifikasi</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a href="#" id="event" data-bs-toggle="dropdown" class="nav-link dropdown-toggle" data-bs-display="static">Event</a>
+                <a href="#" id="event" data-bs-toggle="dropdown" class="nav-link dropdown-toggle"
+                    data-bs-display="static">Event</a>
                 <ul class="dropdown-menu">
-                    <li><a href="" class="dropdown-item">List Partai Kompetisi</a></li>
+                    <li><a href="{% url 'umpire:list_event' %}" class="dropdown-item">List Partai Kompetisi</a></li>
                 </ul>
             </li>
-            <a href="{% url 'umpire:hasil_pertandingan' %}" class="nav-item nav-link">Hasil Pertandingan</a>
+            <!-- <a href="{% url 'umpire:hasil_pertandingan' %}" class="nav-item nav-link">Hasil Pertandingan</a> -->
         </div>
         <a href="{% url 'general:logout' %}" class="btn btn-logout py-2 px-4">Logout</a>
     </div>
@@ -52,11 +57,11 @@
         }
     });
     var dropdownMenu = document.getElementById('event');
-        dropdownMenu.addEventListener('click', function (event) {
-            event.stopPropagation();
-            dropdownMenu.nextElementSibling.classList.toggle('show');
-        });
-     document.addEventListener('click', function (event) {
+    dropdownMenu.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dropdownMenu.nextElementSibling.classList.toggle('show');
+    });
+    document.addEventListener('click', function (event) {
         var isClickInside = dropdownMenu.contains(event.target);
         if (!isClickInside) {
             dropdownMenu.nextElementSibling.classList.remove('show');
